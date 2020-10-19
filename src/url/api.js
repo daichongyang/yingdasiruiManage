@@ -161,8 +161,8 @@ export const getVillageAD = (params) => { return axios.post('/park/Message/getVi
 export const saveVillage = (params) => { return axios.post('/park/Message/saveVillage', params) } //发送小区广告
 export const deleteVillage = (params) => { return axios.post('/park/Message/deleteVillage/' + params) } //删除小区广告，通过id
 
-export const toTenementAD = (params) => { return axios.post('/park/Message/toTenementAD', params) } //获取物业app广告
-export const updatePicture = (params) => { return axios.post('/park/Message/updatePicture', params) } //更新物业app广告
+export const toTenementAD = (params) => { return axios.post('/park/park/banner/list', params) } //轮播图列表
+export const updatePicture = (params) => { return axios.post('/park/park/banner/update', params) } //修改轮播图
 
 export const getPeriphery = (params) => { return axios.post('/park/periphery/list/page', params) } //查询公园周边分页列表
 export const savePeriphery = (params) => { return axios.post('/park/periphery/save', params) } //添加公园周边

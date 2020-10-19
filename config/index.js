@@ -15,10 +15,10 @@ module.exports = {
                 // target: 'http://192.168.0.172:8081',
                 // target: 'http://192.168.0.196:8081',
                 // target: 'http://192.168.0.184:8081/park',
-                //target: 'http://192.168.0.245:8081/park',
+                target: 'http://192.168.0.245:8081/park',
                 //target: 'http://192.168.0.143:8082/park',
                 // target: 'http://www.ubicell.com:8080/apartment',
-                target: 'http://www.ubicell.cn:8080/park',
+                // target: 'http://www.ubicell.cn:8080/park',
                 changeOrigin: true,
                 pathRewrite: {
                     '^/park': '/'

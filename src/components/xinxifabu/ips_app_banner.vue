@@ -12,26 +12,27 @@
          >
         </el-cascader>
       </el-form-item> -->
-      <el-form-item label="选择小区" size="small" prop="xqId">
+      <!-- <el-form-item label="选择小区" size="small" prop="xqId">
         <el-select v-model="formSearch.xqId" placeholder="请选择小区" @change="formSearch1.xqId=formSearch.xqId">
           <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="getlist">查询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="addData">添加图片</el-button>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-button type="primary">添加视频</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div class="app_advertise">
       <div class="app_advertise_item" v-for="(item,index) in formData" :key="index" @click="getItem(index)">
-        <div>位置{{index+1}}</div>
+        <div>位置{{index+1}}--</div>
+        <div>小程序banner:</div>
         <div class="app_advertise_item_l">
-            <el-image v-if="item.id" style="width:178px;height:178px;" :src="item.address"></el-image>
+            <el-image v-if="item.id" style="width:178px;height:178px;" :src="item.appImg"></el-image>
             <el-upload
               v-else
               ref="addUpdata"
@@ -42,6 +43,22 @@
               :on-success="handleAvatarSuccess1"
               >
               <img v-if="imageUrl1" :src="imageUrl1" class="avatar">              
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload> 
+        </div>
+        <div>门户banner:</div>
+        <div class="app_advertise_item_l">
+            <el-image v-if="item.id" style="width:178px;height:178px;" :src="item.portalImg"></el-image>
+            <el-upload
+              v-else
+              ref="addUpdata"
+              class="avatar-uploader"
+              :action="uploadToRealPath"
+              :headers='headers'
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess2"
+              >
+              <img v-if="imageUrl2" :src="imageUrl2" class="avatar">              
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload> 
         </div>
@@ -64,7 +81,7 @@ export default {
   data(){
     return{
       option1:[],
-      uploadToRealPath:'/intellmanagerV3.0/upload/file/upload',
+      uploadToRealPath:'/park/upload/file/upload',
       headers:{
         Authorization:sessionStorage.getItem('Authorization'),
         token:sessionStorage.getItem('token')
@@ -73,7 +90,7 @@ export default {
       formSearch:{},
       formPush:{
         delIds:[],
-        pictureNodes:[],
+        banners:[],
       },
       xqTree:[],
       dataTree:[],
@@ -84,6 +101,7 @@ export default {
       imageUrl:'',
       indexBianhao:0,
       imageUrl1:'',
+      imageUrl2:'',
       defaultProps2: {
         children: 'children',
         label: 'name',
@@ -102,8 +120,8 @@ export default {
       this.formData.splice(index,1)
     },
     getlist(){
-      let params = this.formSearch
-      toTenementAD(params).then((res)=>{//
+      // let params = this.formSearch
+      toTenementAD({}).then((res)=>{//
         console.log(res)
         if(res.data.code == 200){
           this.formData = res.data.data.filter((item)=>{
@@ -187,7 +205,8 @@ export default {
     },
     addData(){//添加
       let obj = {
-        address:''
+        appImg:'',
+        portalImg:'',
       }
       this.formData.push(obj)
       // indexbianhao = this.formData.length-1
@@ -195,15 +214,21 @@ export default {
     saveData(){
       let obj=[]
       this.formData.forEach(item=>{
-        if(item.address){
-          let itemObj = {
-            address:item.address
+        let itemObj = {}
+        if(item.appImg){
+          itemObj = {
+            appImg:item.appImg
           }
-          obj.push(itemObj)
         }
+        if(item.portalImg){
+          itemObj = {
+            portalImg:item.portalImg
+          }
+        }
+        obj.push(itemObj)
 
       })
-      this.formPush.pictureNodes=obj
+      this.formPush.banners=obj
       updatePicture(this.formPush).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -218,16 +243,23 @@ export default {
         }
       })
     },
-    handleAvatarSuccess1(res, file,fileList) {
+    handleAvatarSuccess1(res, file,fileList) {//app/小程序端图片
       console.log(res, file,fileList)
       this.imageUrl = res.data[0];
       this.imageUrl1=URL.createObjectURL(file.raw);
-      this.formData[this.indexBianhao].address = this.imageUrl
+      this.formData[this.indexBianhao].appImg = this.imageUrl
+      console.log(this.formData,this.indexBianhao)
+    },
+    handleAvatarSuccess2(res, file,fileList) {//门户网站图片
+      console.log(res, file,fileList)
+      this.imageUrl = res.data[0];
+      this.imageUrl2=URL.createObjectURL(file.raw);
+      this.formData[this.indexBianhao].portalImg = this.imageUrl
       console.log(this.formData,this.indexBianhao)
     },
   },
   mounted(){
-    this.initData()
+    this.getlist()
   }
 }
 </script>

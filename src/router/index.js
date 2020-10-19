@@ -202,6 +202,9 @@ const resource_device_management = () =>
 //资产归类
 const configPeizhi = () =>
     import ('@/components/extraOptions/configPeizhi');
+//app广告
+const ips_app_banner = () =>
+    import ('@/components/xinxifabu/ips_app_banner');
 
 Vue.use(Router)
 
@@ -262,6 +265,11 @@ export default new Router({
                             path: '/ips_information',
                             name: '通讯',
                             component: ips_information,
+                        },
+                        {
+                            path: '/ips_app_banner',
+                            name: 'app广告',
+                            component: ips_app_banner,
                         },
                         {
                             path: '/service_traffic',
