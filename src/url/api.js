@@ -200,3 +200,8 @@ export const classifyList = (params) => { return axios.post('/park/assets/classi
 export const addClassify = (params) => { return axios.post('/park/assets/classify/save', params) } //添加公园资产归类
 export const deleteClassify = (params) => { return axios.post('/park/assets/classify/delete', params) } //删除公园资产归类
 export const updateClassify = (params) => { return axios.post('/park/assets/classify/update', params) } //修改公园资产归类
+
+export const recommendassetsList = (params) => { return axios.post('/park/park/recommend/recommend/assets', params) } //公园内设施推荐列表
+export const recommendupdateList = (params) => { return axios.post('/park/park/recommend/recommend/update', params) } //修改推荐列表
+export const recommendtype = (params) => { return axios.post('/park/park/recommend/recommend/type/select', params) } //推荐设施类型下拉列表
+export const recommendfacility = (params) => { return axios.post('/park/park/recommend/recommend/facility/select/' + params.type) } //公园设施下拉列表(根据类型获取公园设施下拉列表)

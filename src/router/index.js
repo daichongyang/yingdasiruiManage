@@ -181,6 +181,9 @@ const service_advice = () =>
 //信息发布通知
 const ips_information = () =>
     import ('@/components/xinxifabu/ips_property');
+//公园推荐
+const ips_recommend = () =>
+    import ('@/components/xinxifabu/ips_recommend');
 //通讯
 const ips_notice = () =>
     import ('@/components/xinxifabu/ips_device_advertising');
@@ -265,6 +268,11 @@ export default new Router({
                             path: '/ips_information',
                             name: '通讯',
                             component: ips_information,
+                        },
+                        {
+                            path: '/ips_recommend',
+                            name: '公园推荐',
+                            component: ips_recommend,
                         },
                         {
                             path: '/ips_app_banner',
