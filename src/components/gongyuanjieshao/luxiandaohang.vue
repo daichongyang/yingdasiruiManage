@@ -40,12 +40,12 @@
         <el-form label-position="right" label-width="90px" :model="formPush" ref='formUpdate'>
           <el-form-item label="请选择起点" size="small" prop="xqId">
             <el-select v-model="formPush.startId" @change="getlisttype1">
-              <el-option v-for="item in asset" :label="item.name" :value="item.id" :key="item.id" ></el-option>
+              <el-option v-for="(item,index) in asset" :label="item.name" :value="item.id" :key="index" ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="请选择终点" size="small" prop="xqId">
             <el-select v-model="formPush.endId" @change="getlisttype2">
-              <el-option v-for="item in asset" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              <el-option v-for="(item,index) in asset" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
