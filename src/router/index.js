@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+        return originalPush.call(this, location).catch(err => err)
+    }
+    // import HelloWorld from '@/components/HelloWorld'
 const login = () =>
     import ('@/components/login');
 const home = () =>
@@ -202,6 +207,15 @@ const park_way_plan = () =>
 //智能设备查询
 const resource_device_management = () =>
     import ('@/components/zhinengshebei');
+//运维管理增加设备
+const device_operation_add = () =>
+    import ('@/components/ziyuanManage/device_operation_add');
+//设备管理
+const device_operation_management = () =>
+    import ('@/components/ziyuanManage/device_operation_management');
+//运维计划
+const device_operation_plan = () =>
+    import ('@/components/ziyuanManage/device_operation_plan');
 //资产归类
 const configPeizhi = () =>
     import ('@/components/extraOptions/configPeizhi');
@@ -242,6 +256,30 @@ export default new Router({
                             path: '/configPeizhi',
                             name: '资产归类',
                             component: configPeizhi,
+                        },
+                        {
+                            path: '/device_operation_add',
+                            name: '运维设备添加',
+                            component: device_operation_add,
+                            meta: {
+                                id: 51
+                            }
+                        },
+                        {
+                            path: '/device_operation_management',
+                            name: '运维设备添加',
+                            component: device_operation_management,
+                            meta: {
+                                id: 52
+                            }
+                        },
+                        {
+                            path: '/device_operation_plan',
+                            name: '运维计划',
+                            component: device_operation_plan,
+                            meta: {
+                                id: 53
+                            }
                         },
                         {
                             path: '/service_inspection_log',

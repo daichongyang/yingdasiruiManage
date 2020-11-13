@@ -26,6 +26,14 @@ html {
     /* line-height: 0px; */
 }
 
+.login .el-input {
+    width: 100%;
+}
+
+.el-input {
+    width: 200px;
+}
+
 .login .el-input__inner {
     max-width: 100%;
 }
@@ -87,12 +95,12 @@ input::placeholder {
 }
 
 .export_template {
-    position: absolute;
+    /* position: absolute;
     top: 0;
-    right: 0;
+    right: 0; */
     text-align: right;
-    display: inline-block;
-    height: 100%;
+    /* display: inline-block;
+    height: 100%; */
 }
 
 
@@ -277,4 +285,8 @@ input::placeholder {
 
 .infor_item_img video {
     height: 100px;
+}
+
+#container {
+    margin-bottom: 20px;
 }

@@ -20,7 +20,7 @@
                   <div class="group_ul_li_item">华东区</div>
                   <div class="group_ul_li_item">华东区</div>
                   <div class="group_ul_li_item">华东区</div>
-                  <div class="group_ul_li_item">华东区</div>  
+                  <div class="group_ul_li_item">华东区</div>
                   <div class="group_ul_li_item">华东区</div>
                 </div>
               </div>
