@@ -30,9 +30,14 @@ html {
     width: 100%;
 }
 
-.el-input {
+.mapForm .el-input {
     width: 200px;
 }
+
+
+/* .el-input {
+    width: 200px;
+} */
 
 .login .el-input__inner {
     max-width: 100%;

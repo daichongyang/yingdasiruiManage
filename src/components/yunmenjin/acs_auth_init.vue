@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
@@ -401,7 +401,7 @@ export default {
                 message: '授权成功',
                 type: 'success'
               });
-              this.getInit()
+              this.getlist()
             }else{
               this.$message('授权失败')
             }
@@ -542,7 +542,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -550,7 +550,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     updateShowBox(item){//统一分配弹框
       console.log(this.deleBatch)

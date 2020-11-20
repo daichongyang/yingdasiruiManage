@@ -192,7 +192,7 @@ export default {
           addHdlGlobalParam(this.formPush).then((res)=>{
             console.log(res)
             if(res.data.code == 200){
-              this.getInit()
+              this.getlist()
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -223,7 +223,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {

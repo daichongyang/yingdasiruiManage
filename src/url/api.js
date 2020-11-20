@@ -218,6 +218,15 @@ export const getTask = (params) => { return axios.post('/park/patrol/getTask', p
 export const addTask = (params) => { return axios.post('/park/patrol/addTask', params) } //添加运维任务
 export const editTask = (params) => { return axios.post('/park/patrol/editTask', params) } //编辑运维任务
 export const pauseTask = (params) => { return axios.post('/park/patrol/pause/' + params.taskId) } //运维任务停用
-export const allocatPatrolTask = (params) => { return axios.post('/park/patrol/allocatPatrolTask', params) } //手动分配运维任务给某人
+export const allocatPatrolTask = (params) => { return axios.post('/park/patrol/allocatePatrolTask', params) } //手动分配运维任务给某人
 export const getPatrolDetails = (params) => { return axios.post('/park/patrol/getPatrolDetails', params) } //后台调用：运维详情
 export const getAvailableStaff = (params) => { return axios.post('/park/patrol/getAvailableStaff', params) } //获取任务可分配的运维人员列表
+
+export const appointmentList = (params) => { return axios.post('/park/ap-appointment/list/page', params) } //查询景点无分页列表
+export const appointmentAdd = (params) => { return axios.post('/park/ap-appointment/pointment/addData', params) } //添加可预约景点
+export const appointmentListData = (params) => { return axios.post('/park/ap-appointment/pointment/listData', params) } //查询预约记录
+
+export const jobgoesList = (params) => { return axios.post('/park/jobgoes/list/page', params) } //查询工作人员无分页列表
+export const updatalarData = (params) => { return axios.post('/park/jobgoes/jobgoeslist/updatalarData', params) } //派单派工作人员
+export const updaalltedata = (params) => { return axios.post('/park/jobgoes/jobgoeslist/updaalltedata', params) } //确定完成派单
+export const numberAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/numberAallocation', params) } //放号

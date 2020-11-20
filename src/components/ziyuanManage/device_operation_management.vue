@@ -80,8 +80,12 @@
               <el-option label="卫生" :value="4"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="地图点位">
+            <el-input v-model="mapOpints"></el-input>
+            <el-button size="mini" @click="mapDialog = true">选 择</el-button>
+          </el-form-item>
         </el-form>
-        <div id="container"></div>
+        <!-- <div id="container"></div> -->
         <el-form label-position="right" label-width="110px">
           
         </el-form>
@@ -118,10 +122,10 @@
               <el-option label="卫生" :value="4"></el-option>
             </el-select>
           </el-form-item>
-        </el-form>
-        <div id="container"></div>
-        <el-form label-position="right" label-width="110px">
-          
+          <el-form-item label="地图点位">
+            <el-input v-model="mapOpints"></el-input>
+            <el-button size="mini" @click="mapDialog = true,aa()">选 择</el-button>
+          </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -129,12 +133,18 @@
         <el-button size="medium" @click="updateList('formUpdate')">确定</el-button>
       </div>
     </el-dialog>
-
+    <!-- 地图 -->
+    <el-dialog title="地图" :visible.sync="mapDialog">
+      <div class="cont_box_left">
+        <mapPoints @mapOpintsArr="mapOpintsArr" :opintsArr="opintsArr"></mapPoints>
+      </div>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import paging from '../paging'
+import mapPoints from './mapPoints'
 import searchModule from '../searchModule'
 import TMap from '../../assets/js/initmap'
 
@@ -143,7 +153,8 @@ export default {
   props:['showBtnFather'],
   data(){
     return{
-      imageUrl:'',
+      mapOpints:'',
+      mapDialog:false,
       showAddBtn:this.showBtnFather==1?false:true,//显示添加按钮
       showDelBtn:true,//显示批量删除按钮
       formItems:{//搜索模块label
@@ -170,12 +181,6 @@ export default {
       },
       formPush:{//信息提交
         items:[
-          {
-            latitude:1,
-            longitude:2,
-            name:"测试",
-            serial:1000,
-          }
         ]
       },//表单提交
       formData: [],//数据
@@ -189,10 +194,29 @@ export default {
         coverVideo:[{ required: true, message: '该项不能为空',trigger: 'change'}],
       },
       mapObj:'',
-      markerObj:''
+      markerObj:'',
+      opintsArr:[],
+      opintsArr1:[]
     }
   },
   methods:{
+    aa(){
+      setTimeout(item=>{
+        this.opintsArr = this.opintsArr1
+        console.log(this.opintsArr)
+      },5000)
+      
+    },
+    mapOpintsArr(val){//地图点位信息
+      this.mapOpints=''
+      this.formPush.items = val
+      if(val.length!=0){
+        val.forEach(item=>{
+          this.mapOpints = item.name+","+this.mapOpints
+        })
+      }
+      this.mapDialog=false
+    },
     upshDevInfor(){//
       this.$emit("getDevIds",this.deleBatch)
     },
@@ -297,7 +321,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
           this.updateDialog = false
@@ -324,7 +348,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -339,6 +363,7 @@ export default {
       this.getlist()
     },
     updateShowBox(item){//修改东西弹窗
+      this.mapOpints = ''
       this.formUpdate = {
         items:item.items,
         name:item.name,
@@ -350,7 +375,11 @@ export default {
         longitude:item.longitude,
         latitude:item.latitude
       }
-        console.log(this.formUpdate,this.fileList)
+      this.opintsArr1 = item.items.filter(item=>{
+        this.mapOpints = item.name+","+this.mapOpints
+        return item
+      })
+        console.log(this.formUpdate,this.opintsArr)
 
       },
 
@@ -364,7 +393,7 @@ export default {
       // }
       
       if(!this.mapObj){
-        this.initTmap()
+        // this.initTmap()
       }
       
     },
@@ -380,6 +409,7 @@ export default {
   },
   components:{
     paging,
+    mapPoints,
     searchModule
   }
 }

@@ -207,10 +207,7 @@ export default {
         })
       }
     },
-    getlist(obj){
-      if(obj){
-        this.formSearch = obj
-      }
+    getlist(){
       housePasscardGetSectionHouse(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -243,7 +240,8 @@ export default {
                 orgId:this.dataTree[0].id,
                 xqId:this.xqTree[0].id,
               }
-              this.getlist(obj)
+              this.formSearch = obj
+              this.getlist()
             }
           })
         }
@@ -251,7 +249,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     handleChange(value){
       if(value.length!=0){

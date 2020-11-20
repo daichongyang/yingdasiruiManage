@@ -41,7 +41,21 @@
 
 <script>
 export default {
-  props:["formItems","showAddBtn","showDelBtn"],
+  // props:["formItems","showAddBtn","showDelBtn"],
+  props:{
+    formItems:{
+      type:Object,
+      default:{}
+    },
+    showAddBtn:{
+      type:Boolean,
+      default:true
+    },
+    showDelBtn:{
+      type:Boolean,
+      default:true
+    },
+  },
   data(){
     return{
       formSearch:{
@@ -49,6 +63,11 @@ export default {
         current:1
       },
     }
+  },
+  watch:{
+    formItems(val1,val2){
+      console.log(val1,val2)
+    } 
   },
   methods:{
     getList(){
@@ -62,7 +81,7 @@ export default {
     }
   },
   mounted(){
-    // console.log(this.formItems)
+    console.log(this.formItems)
   }
 }
 </script>

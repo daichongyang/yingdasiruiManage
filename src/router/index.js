@@ -173,13 +173,16 @@ const finance_statements = () =>
     import ('@/components/lsmx');
 //园区场馆-公园管理
 const park_management = () =>
-    import ('@/components/gongyuanjieshao/gongyuanjieshao');
+    import ('@/components/parkOfApartment/gongyuanjieshao');
 //园区场馆-景点管理
 const park_tourist = () =>
-    import ('@/components/gongyuanjieshao/gongyuanremenjingdian');
+    import ('@/components/parkOfApartment/gongyuanremenjingdian');
 //周边介绍
 const service_periphery_presentation = () =>
-    import ('@/components/gongyuanjieshao/zhoubianjieshao');
+    import ('@/components/parkOfApartment/zhoubianjieshao');
+//周边介绍
+const park_appointment = () =>
+    import ('@/components/parkOfApartment/park_appointment');
 
 const service_advice = () =>
     import ('@/components/property/property_complaint_suggestion');
@@ -203,13 +206,16 @@ const personnel_work = () =>
     import ('@/components/renyuanguanli/gongzuorenyuan');
 //路线导航
 const park_way_plan = () =>
-    import ('@/components/gongyuanjieshao/luxiandaohang');
+    import ('@/components/parkOfApartment/luxiandaohang');
 //智能设备查询
 const resource_device_management = () =>
     import ('@/components/zhinengshebei');
 //运维管理增加设备
 const device_operation_add = () =>
     import ('@/components/ziyuanManage/device_operation_add');
+//运维管理增加设备
+const mapPoints = () =>
+    import ('@/components/ziyuanManage/mapPoints');
 //设备管理
 const device_operation_management = () =>
     import ('@/components/ziyuanManage/device_operation_management');
@@ -256,6 +262,11 @@ export default new Router({
                             path: '/configPeizhi',
                             name: '资产归类',
                             component: configPeizhi,
+                        },
+                        {
+                            path: '/mapPoints',
+                            name: '地图',
+                            component: mapPoints,
                         },
                         {
                             path: '/device_operation_add',
@@ -463,6 +474,11 @@ export default new Router({
                             path: '/service_periphery_presentation',
                             name: '周边介绍',
                             component: service_periphery_presentation,
+                        },
+                        {
+                            path: '/park_appointment',
+                            name: '场馆预约',
+                            component: park_appointment,
                         },
                         {
                             path: '/acs_dev1',

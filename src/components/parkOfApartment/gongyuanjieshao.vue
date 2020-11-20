@@ -23,34 +23,33 @@
         <template slot-scope="scope" v-if="scope.row.businessHours">
           {{$root.getDateArray(Number(scope.row.businessHours))[9]}}
         </template>
-</el-table-column>
-<el-table-column prop="contactNumber" label="联系电话"></el-table-column>
-<el-table-column prop="creator" label="创建者"></el-table-column>
-<el-table-column prop="description" label="描述"></el-table-column>
-<el-table-column prop="gmtCreate" label="创建时间">
-    <template slot-scope="scope" v-if="scope.row.gmtCreate">
-          {{$root.getDateArray(scope.row.gmtCreate)[9]}}
+    </el-table-column>
+    <el-table-column prop="contactNumber" label="联系电话"></el-table-column>
+    <el-table-column prop="creator" label="创建者"></el-table-column>
+    <el-table-column prop="description" label="描述"></el-table-column>
+    <el-table-column prop="gmtCreate" label="创建时间">
+        <template slot-scope="scope" v-if="scope.row.gmtCreate">
+            {{$root.getDateArray(scope.row.gmtCreate)[9]}}
+            </template>
+    </el-table-column>
+    <el-table-column prop="gmtModified" label="修改时间">
+        <template slot-scope="scope" v-if="scope.row.gmtModified">
+        {{$root.getDateArray(scope.row.gmtModified)[9]}}
         </template>
-</el-table-column>
-<el-table-column prop="gmtModified" label="修改时间">
-    <template slot-scope="scope" v-if="scope.row.gmtModified">
-       {{$root.getDateArray(scope.row.gmtModified)[9]}}
-     </template>
-</el-table-column>
+    </el-table-column>
 
-<el-table-column prop="id" label="公园id"></el-table-column>
-<!--  <el-table-column prop="intro"label="简介"></el-table-column> -->
-<el-table-column prop="label" label="标签"></el-table-column>
-<el-table-column prop="name" label="公园名称"></el-table-column>
-<el-table-column prop="updator" label="更新者"></el-table-column>
-<el-table-column label="操作" fixed="right" width=250>
-    <template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
-          <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button>
-
-				</template>
-</el-table-column>
+    <el-table-column prop="id" label="公园id"></el-table-column>
+    <!--  <el-table-column prop="intro"label="简介"></el-table-column> -->
+    <el-table-column prop="label" label="标签"></el-table-column>
+    <el-table-column prop="name" label="公园名称"></el-table-column>
+    <el-table-column prop="updator" label="更新者"></el-table-column>
+    <el-table-column label="操作" fixed="right" width=250>
+        <template slot-scope="scope">
+            <el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
+            <el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+            <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button>
+        </template>
+    </el-table-column>
 </el-table>
 
 <paging @changePage=handleCurrentPage :get-total='total'></paging>
@@ -164,7 +163,6 @@
 
 <script>
     import paging from '../paging'
-    import TMap from '../../assets/js/initmap.js'
     import {
         classifylisttwo,
         getParklist,
@@ -239,44 +237,6 @@
             }
         },
         methods: {
-            initTmap() {
-                let address = "";
-                let that = this;
-                TMap.init().then((TMap) => {
-                    var center = new TMap.LatLng(22.831779, 114.980945);
-                    //初始化地图
-                    var map = new TMap.Map("container", {
-                        rotation: 20, //设置地图旋转角度
-                        pitch: 0, //设置俯仰角度（0~45）
-                        zoom: 17, //设置地图缩放级别
-                        center: center //设置地图中心点坐标
-                    });
-                    TMap.ImageTileLayer.createCustomLayer({
-                        layerId: '5f6b13185922',
-                        // layerId: '5f5f2ad23757',
-                        map: map
-                    }).then(customLayer => {
-                        if (customLayer) { // 成功创建个性化图层
-
-                        } else {
-                            // 创建失败，请查看控制台错误信息
-                            console.log('fail');
-                        }
-                    });
-                    map.on('click',  function(e)  {
-                        console.log(e)
-
-                        that.formPush.latitude = e.latLng.getLat();
-                        that.formPush.longitude = e.latLng.getLng();
-
-                                 
-                        console.log(e.latLng.getLng() +  ','  +  e.latLng.getLat())          
-                    });  
-                })
-
-            },
-
-
             onChange(file, fileList) {
                 console.log(file, fileList)
                 this.dialogImageUrl = URL.createObjectURL(file.raw);
@@ -325,7 +285,6 @@
             },
             showAdd() {
                 this.addDialog = true
-                this.initTmap()
             },
             addList(addList) { //添加
 

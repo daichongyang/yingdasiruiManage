@@ -150,7 +150,7 @@ export default {
   data(){
     return{
       imageUrl:'',
-      showAddBtn:this.showBtnFather==1?false:true,//显示添加按钮
+      showAddBtn:this.showBtnFather?false:true,//显示添加按钮
       showDelBtn:true,//显示批量删除按钮
       formItems:{//搜索模块label
         formItemsArr:[
@@ -202,7 +202,21 @@ export default {
           {
             name:'人员类型',
             filed:"type",
-            type:'select'
+            type:'select',
+            options:[
+              {
+                label:'运维人员',
+                value:1,
+              },
+              {
+                label:'维修人员',
+                value:2,
+              },
+              {
+                label:'巡查人员',
+                value:3,
+              },
+            ]
           }
         ],
         labelWidth:'80px'
@@ -210,6 +224,7 @@ export default {
       deleBatch:[],
       formSearch:{//查询条件
         current:1,
+        type:this.showBtnFather||'',
         size: 10
       },
       formPush:{//信息提交

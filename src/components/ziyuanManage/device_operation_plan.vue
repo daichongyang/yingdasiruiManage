@@ -26,12 +26,12 @@
       <el-table-column prop="numStaff" label="运维人数"></el-table-column>
       <el-table-column prop="type" label="任务类型">
         <template slot-scope="scope">
-          {{scope.row.type==1?"设备运维任务":scope.row.type==2?"手动运维计划":"巡查任务"}}
+          {{scope.row.type==1?"设备运维任务":scope.row.type==2?"手动运维计划":scope.row.type==3?"报修工单":scope.row.type==4?"巡查计划":'报警处理'}}
         </template>
       </el-table-column>
 
       <el-table-column prop="durationType" label="循环类型">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="scope.row.durationType">
           {{scope.row.durationType==1?"小时":scope.row.durationType==2?"天":scope.row.durationType==3?"月":"年"}}
         </template>
       </el-table-column>
@@ -71,7 +71,7 @@
             <el-dropdown-item @click.native="deleInfor(scope.row.id)">停 用</el-dropdown-item>
             <!-- <el-dropdown-item @click.native="getOperationConfirm(scope.row)">人员接单</el-dropdown-item> -->
             <el-dropdown-item @click.native="formSearch1.infoId=scope.row.id,taskDialog=true,getGetAvailableStaff()">手动分配任务</el-dropdown-item>
-            <el-dropdown-item @click.native="getGetPatrolDetails(scope.row.id),detailsDialog=false">查看详情</el-dropdown-item>
+            <el-dropdown-item @click.native="getGetPatrolDetails(scope.row.id),detailsDialog=true">查看详情</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 				</template>
@@ -89,36 +89,45 @@
             <el-input v-model="formPush.phone"></el-input>
           </el-form-item>
           <el-form-item label="任务类型">
-            <el-select v-model="formPush.type">
+            <el-select v-model="formPush.type" @change="changeType">
               <el-option label="设备运维任务" :value="1"></el-option>
               <el-option label="手动运维计划" :value="2"></el-option>
               <el-option label="维修工单" :value="3"></el-option>
               <el-option label="巡查任务" :value="4"></el-option>
+              <el-option label="报警受理" :value="5"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="设备">
+          <el-form-item label="设备" v-if="formPush.type == 1||formPush.type == 2||formPush.type == 3">
             <el-input v-model="devNames"></el-input>
             <el-button size="mini" @click="shebeiDialog = true">选 择</el-button>
             <!-- <el-input v-model="formPush.devIds"></el-input> -->
           </el-form-item>
-          <el-form-item label="运维人员" v-if="formPush.type == 2">
+          <el-form-item label="运维人员" v-if="formPush.type == 2||formPush.type == 4||formPush.type == 5">
             <el-input v-model="reyuanNames"></el-input>
             <el-button size="mini" @click="renyuanDialog = true">选 择</el-button>
           </el-form-item>
           <el-form-item label="运维人员人数" v-if="formPush.type == 1">
             <el-input v-model="formPush.numStaff"></el-input>
           </el-form-item>
-          <el-form-item label="运维任务时间" v-if="formPush.type == 1">
+          <el-form-item label="地图点位" v-if="formPush.type == 4">
+            <el-input v-model="mapOpints"></el-input>
+            <el-button size="mini" @click="mapDialog = true">选 择</el-button>
+          </el-form-item>
+          <el-form-item label="报警人姓名" v-if="formPush.type == 5">
+            <el-input v-model="baojingName"></el-input>
+            <el-button size="mini" @click="getsosQuery(),baojingDialog = true">选 择</el-button>
+          </el-form-item>
+          <el-form-item label="运维任务时间" v-if="formPush.type == 1||formPush.type == 4">
             <el-date-picker
               v-model="formPush.patrolDate"
               type="datetime"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="循环间隔时间" v-if="formPush.type == 1">
+          <el-form-item label="循环间隔时间" v-if="formPush.type == 1||formPush.type == 4">
             <el-input v-model="formPush.duration	"></el-input>
           </el-form-item>
-          <el-form-item label="循环类型" v-if="formPush.type == 1">
+          <el-form-item label="循环类型" v-if="formPush.type == 1||formPush.type == 4">
             <el-select v-model="formPush.durationType">
               <el-option label="小时" :value="1"></el-option>
               <el-option label="天" :value="2"></el-option>
@@ -130,14 +139,14 @@
           <el-form-item label="维修描述" v-if="formPush.type == 3">
             <el-input v-model="formPush.content"></el-input>
           </el-form-item>
-          <el-form-item label="开始时间" v-if="formPush.type == 2||formPush.type == 3">
+          <el-form-item label="开始时间" v-if="formPush.type == 2||formPush.type == 3||formPush.type == 5">
             <el-date-picker
               v-model="formPush.startTime"
               type="datetime"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="结束时间" v-if="formPush.type == 2||formPush.type == 3">
+          <el-form-item label="结束时间" v-if="formPush.type == 2||formPush.type == 3||formPush.type == 5">
             <el-date-picker
               v-model="formPush.endTime"
               type="datetime"
@@ -172,36 +181,40 @@
           <!-- <el-form-item label="手机号" prop="phone">
             <el-input v-model="formUpdate.phone"></el-input>
           </el-form-item> -->
-          <el-form-item label="任务类型">
-            <el-select v-model="formUpdate.type">
+          <!-- <el-form-item label="任务类型">
+            <el-select v-model="yunweitype">
               <el-option label="设备运维任务" :value="1"></el-option>
               <el-option label="手动运维计划" :value="2"></el-option>
               <el-option label="维修工单" :value="3"></el-option>
               <el-option label="巡查任务" :value="4"></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="设备">
+          </el-form-item> -->
+          <el-form-item label="设备" v-if="yunweitype == 1||yunweitype == 2||yunweitype == 3">
             <el-input v-model="devNames"></el-input>
             <el-button size="mini" @click="shebeiDialog = true">选 择</el-button>
           </el-form-item>
-          <el-form-item label="运维人员" v-if="formUpdate.type == 2">
+          <el-form-item label="运维人员" v-if="yunweitype == 2||yunweitype == 4||yunweitype == 5">
             <el-input v-model="reyuanNames"></el-input>
             <el-button size="mini" @click="renyuanDialog = true">选 择</el-button>
           </el-form-item>
-          <el-form-item label="运维人员人数" v-if="formUpdate.type == 1">
+          <el-form-item label="报警人姓名" v-if="yunweitype == 5">
+            <el-input v-model="baojingName"></el-input>
+            <el-button size="mini" @click="getsosQuery(),baojingDialog = true">选 择</el-button>
+          </el-form-item>
+          <el-form-item label="运维人员人数" v-if="yunweitype == 1">
             <el-input v-model="formUpdate.numStaff"></el-input>
           </el-form-item>
-          <el-form-item label="运维任务时间" v-if="formUpdate.type == 1">
+          <el-form-item label="运维任务时间" v-if="yunweitype == 1||yunweitype == 4">
             <el-date-picker
               v-model="formUpdate.patrolDate"
               type="datetime"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="循环间隔时间" v-if="formUpdate.type == 1">
+          <el-form-item label="循环间隔时间" v-if="yunweitype == 1||yunweitype == 4">
             <el-input v-model="formUpdate.duration	"></el-input>
           </el-form-item>
-          <el-form-item label="循环类型" v-if="formUpdate.type == 1">
+          <el-form-item label="循环类型" v-if="yunweitype == 1||yunweitype == 4">
             <el-select v-model="formUpdate.durationType">
               <el-option label="小时" :value="1"></el-option>
               <el-option label="天" :value="2"></el-option>
@@ -210,24 +223,24 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="维修描述" v-if="formUpdate.type == 3">
+          <el-form-item label="维修描述" v-if="yunweitype == 3">
             <el-input v-model="formUpdate.content"></el-input>
           </el-form-item>
-          <el-form-item label="开始时间" v-if="formUpdate.type == 2||formUpdate.type == 3">
+          <el-form-item label="开始时间" v-if="yunweitype == 2||yunweitype == 3||yunweitype == 5">
             <el-date-picker
               v-model="formUpdate.startTime"
               type="datetime"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="结束时间" v-if="formUpdate.type == 2||formUpdate.type == 3">
+          <el-form-item label="结束时间" v-if="yunweitype == 2||yunweitype == 3||yunweitype == 5">
             <el-date-picker
               v-model="formUpdate.endTime"
               type="datetime"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="图片" v-if="formUpdate.type == 3">
+          <el-form-item label="图片" v-if="yunweitype == 3">
           <el-upload
             :action="uploadToRealPath"
             list-type="picture-card"
@@ -242,6 +255,71 @@
       <div slot="footer" class="dialog-footer">
         <el-button size="medium" @click="updateDialog = false">取 消</el-button>
         <el-button size="medium" @click="updateList('formUpdate')">确定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 详情 -->
+    <el-dialog title="详情" :visible.sync="detailsDialog">
+      <div class="cont_box_left">
+        <el-table ref="multipleTable" :data="formData2" style="width: 100%">
+          <el-table-column prop="taskName"label="名称"></el-table-column>
+          <el-table-column prop="type" label="任务类型">
+            <template slot-scope="scope">
+              {{scope.row.type==1?"设备运维任务":scope.row.type==2?"手动运维计划":scope.row.type==3?"报修工单":scope.row.type==4?"巡查计划":'报警处理'}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="devNames1" label="设备列表"></el-table-column>
+          <el-table-column prop="pics1" label="报修工单照片"></el-table-column>
+          <el-table-column prop="points1" label="巡查点位"></el-table-column>
+          <el-table-column prop="staffs1" label="运维人员"></el-table-column>
+          <el-table-column prop="offList1" label="运维人员请假情况"></el-table-column>
+          <el-table-column prop="outcome1" label="运维检查结果"></el-table-column>
+          <el-table-column prop="gmtModified" label="修改时间">
+            <template slot-scope="scope" v-if="scope.row.gmtModified">
+              {{$root.getDateArray(Number(scope.row.gmtModified))[9]}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="gmtCreate" label="创建时间">
+            <template slot-scope="scope" v-if="scope.row.gmtCreate">
+              {{$root.getDateArray(Number(scope.row.gmtCreate))[9]}}
+            </template>
+          </el-table-column>
+        </el-table>
+        <paging2 @changePage = handleCurrentPage2 :get-total='total2'></paging2>
+      </div>
+    </el-dialog>
+    <!-- 报警 -->
+    <el-dialog title="报警" :visible.sync="baojingDialog">
+      <div class="cont_box_left">
+        <el-table :data="formData3" style="width: 100% height:300px;">
+          <el-table-column prop="" label="编号">
+              <template slot-scope="scope">
+                <el-radio @change="baojingName=scope.row.nickname" v-model="formPush.alarmId" :label="scope.row.id">{{scope.row.id}}</el-radio>
+              </template>
+          </el-table-column>
+          <el-table-column prop="" label="创建时间">
+              <template slot-scope="scope" v-if="scope.row.gmtCreate">
+              {{$root.getDateArray(scope.row.gmtCreate)[9]}}
+              </template>
+          </el-table-column>
+          <el-table-column prop="" label="修改时间">
+              <template slot-scope="scope" v-if="scope.row.gmtModified">
+                  {{$root.getDateArray(scope.row.gmtModified)[9]}}
+              </template>
+          </el-table-column>
+          <el-table-column prop="latitude" label="纬度"></el-table-column>
+          <el-table-column prop="longitude" label="经度"></el-table-column>
+          <el-table-column prop="remark" label="备注"></el-table-column>
+          <el-table-column prop="score" label="评论"></el-table-column>
+          <el-table-column prop="nickname" label="报警人姓名"></el-table-column>
+
+          <el-table-column prop="phone" label="报警人手机号"></el-table-column>
+          <el-table-column prop="status" label="状态">
+              <template slot-scope="scope">
+                  {{scope.row.status==1?"未处理":scope.row.status==2?"处理中":scope.row.status==3?"派单处理中":"处理完成"}}
+              </template>
+          </el-table-column>
+        </el-table>
+        <paging3 @changePage = handleCurrentPage3 :get-total='total3'></paging3>
       </div>
     </el-dialog>
     <!-- 手动分配运维任务给某人 -->
@@ -277,18 +355,25 @@
           </el-table-column>
         </el-table>
         <paging1 @changePage = handleCurrentPage1 :get-total='total1'></paging1>
+        <el-button size="small" type="primary" @click="getAllocatPatrolTask">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 运维人员 -->
     <el-dialog title="运维人员" :visible.sync="renyuanDialog">
       <div class="cont_box_left">
-        <deviceOperationAdd @getRenyuanIds="getRenyuanIds" :showBtnFather="1" ></deviceOperationAdd>
+        <deviceOperationAdd @getRenyuanIds="getRenyuanIds" :showBtnFather="3" ></deviceOperationAdd>
       </div>
     </el-dialog>
     <!-- 运维设备 -->
     <el-dialog title="运维设备" :visible.sync="shebeiDialog">
       <div class="cont_box_left">
-        <deviceOperationManagement @getDevIds="getDevIds" :showBtnFather="1" ></deviceOperationManagement>
+        <deviceOperationManagement @getDevIds="getDevIds" :showBtnFather="3" ></deviceOperationManagement>
+      </div>
+    </el-dialog>
+    <!-- 地图 -->
+    <el-dialog title="地图" :visible.sync="mapDialog">
+      <div class="cont_box_left">
+        <mapPoints @mapOpintsArr="mapOpintsArr" ></mapPoints>
       </div>
     </el-dialog>
   </section>
@@ -297,10 +382,13 @@
 <script>
 import paging from '../paging'
 import paging1 from '../paging'
+import paging2 from '../paging'
+import paging3 from '../paging'
 import searchModule from '../searchModule'
+import mapPoints from './mapPoints'
 import deviceOperationAdd from './device_operation_add'
 import deviceOperationManagement from './device_operation_management'
-import { getTask,addTask,editTask,pauseTask,allocatPatrolTask,getPatrolDetails,operationConfirm,getAvailableStaff} from '../../url/api.js';
+import { sosQuery,getTask,addTask,editTask,pauseTask,allocatPatrolTask,getPatrolDetails,operationConfirm,getAvailableStaff} from '../../url/api.js';
 export default {
   data(){
     return{
@@ -310,6 +398,11 @@ export default {
         token:sessionStorage.getItem('token')
       },
       imageUrl:'',
+      yunweitype:'',
+      baojingName:'',
+      showBtnFather:3,
+      baojingDialog:false,
+      mapDialog:false,
       shebeiDialog:false,
       detailsDialog:false,
       showAddBtn:true,//显示添加按钮
@@ -333,6 +426,10 @@ export default {
             type:'radio',
             options:[
               {
+                label:"",
+                name:"全部"
+              },
+              {
                 label:1,
                 name:"是"
               },
@@ -355,12 +452,16 @@ export default {
                 value:2
               },
               {
-                label:'维修工单',
+                label:'报修工单',
                 value:3
               },
               {
                 label:'巡查任务',
                 value:4
+              },
+              {
+                label:'报警受理',
+                value:5
               },
             ],
             type:'select'
@@ -369,6 +470,7 @@ export default {
         labelWidth:'90px'
       },
       deleBatch:[],
+      mapOpints:'',
       deleBatch1:[],
       formSearch:{//查询条件
         current:1,
@@ -378,14 +480,26 @@ export default {
         current:1,
         size: 10
       },
+      formSearch2:{//查询条件
+        current:1,
+        size: 10
+      },
+      formSearch3:{//查询条件
+        current:1,
+        size: 10
+      },
       formPush:{//信息提交
 
       },//表单提交
       formData: [],//数据
       formData1: [],//数据
+      formData2: [],//数据
+      formData3: [],//数据
       formUpdate:{},//修改表单
       total: 0,//数据总数
       total1: 0,//数据总数
+      total2: 0,//数据总数
+      total3: 0,//数据总数
       addDialog:false,
       updateDialog:false,
       rules: {
@@ -401,6 +515,11 @@ export default {
       markerObj:'',
       reyuanNames:'',
       devNames:'',
+      offList	:'',
+      outcome:'',
+      pics:'',
+      point:'',
+      staffs:'',
       taskDialog:false
     }
   },
@@ -422,21 +541,95 @@ export default {
     //   .catch(_ => {});
 
     // },
+    getsosQuery(){
+      let params = this.formSearch3
+      sosQuery(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.formData3=res.data.data.records
+          this.total3=res.data.data.total
+        }
+      })
+    },
+    changeType(val){//改变任务类型
+      console.log(val)
+      this.formPush={}
+      this.formPush.type=val
+    },
     getGetAvailableStaff(){//获取任务可分配的运维人员列表
       let params = this.formSearch1
       getAvailableStaff(params).then(res=>{
 
         if(res.data.code == 200){
           this.formData1 = res.data.data.records
+          this.total1 = res.data.data.total
         }
       })
     },
-    getGetPatrolDetails(id){//后台调用：运维详情
-      let params = {
-        taskId:id
+    mapOpintsArr(val){//地图点位信息
+      this.mapOpints=''
+      this.formPush.points = val
+      if(val.length!=0){
+        val.forEach(item=>{
+          this.mapOpints = item.name+","+this.mapOpints
+        })
       }
+      this.mapDialog=false
+    },
+    getGetPatrolDetails(id){//后台调用：运维详情
+    console.log(id)
+      this.formSearch2.taskId = id
+      let params = this.formSearch2
+
+      
+      
+      
+      
+      
       getPatrolDetails(params).then(res=>{
         console.log(res)
+        if(res.data.code == 200){
+          this.formData2 = res.data.data.records.filter(item=>{
+            if(item.devices){
+              item.devNames1 = ''
+              item.devices.forEach(ii=>{
+                item.devNames1 = ii.name+"/"+item.devNames1
+              })
+            }
+            if(item.offList){
+              item.offList1 = ''
+              item.offList.forEach(ii=>{
+                item.offList1 = ii.name+"/"+item.offList1
+              })            }
+            if(item.outcome){
+              item.outcome1 = ''
+              item.outcome.forEach(ii=>{
+                item.outcome1 = ii.name+"/"+item.outcome1
+              })    
+            }
+            if(item.pics){
+              item.pics1 = ''
+              item.pics.forEach(ii=>{
+                item.pics1 = ii.name+"/"+item.pics1
+              })    
+            }
+            if(item.point){
+              item.point1 = ''
+              item.point.forEach(ii=>{
+                item.point1 = ii.name+"/"+item.point1
+              })    
+            }
+            if(item.staffs){
+              item.staffs1 = ''
+              item.staffs.forEach(ii=>{
+                item.staffs1 = ii.name+"/"+item.staffs1
+              })  
+            }
+            return item
+          })
+          this.total2 = res.data.data.total
+        }
+        
       })
     },
     getAllocatPatrolTask(){//手动分配运维任务给某人
@@ -446,7 +639,7 @@ export default {
           staffs.push(item.id)
         })
         let params = {
-          infoId:this.infoId,
+          infoId:this.formSearch1.infoId,
           staffs:staffs
         }
         allocatPatrolTask(params).then(res=>{
@@ -592,6 +785,14 @@ export default {
       this.formSearch1.current=val
       this.getGetAvailableStaff()
     },
+    handleCurrentPage2(val){//页码改变
+      this.formSearch2.current=val
+      this.getGetPatrolDetails(this.formSearch2.taskId)
+    },
+    handleCurrentPage3(val){//页码改变
+      this.formSearch3.current=val
+      this.getsosQuery()
+    },
     updateShowBox(item){//修改东西弹窗
     console.log(item)
       let devList=item.devList
@@ -605,8 +806,10 @@ export default {
         patrolDate:item.patrolDate,
         startTime:item.startTime,
         name:item.name,
-        type:item.type,
+        alarmId:item.alarmId,
+        // type:item.type,
       }
+      this.yunweitype = item.type
       this.formUpdate.staffs=[]
       this.formUpdate.devIds=[]
       if(staffs){
@@ -630,6 +833,9 @@ export default {
     },
     getAddTotrue(val){//从模块中执行添加弹框功能
       this.addDialog=val
+      this.reyuanNames = ''
+      this.devNames = ''
+      this.mapOpints = ''
       // if(this.markerObj){
       //   this.markerObj.setMap(null)
       // }
@@ -661,7 +867,10 @@ export default {
   components:{
     paging,
     paging1,
+    paging2,
+    paging3,
     searchModule,
+    mapPoints,
     deviceOperationAdd,
     deviceOperationManagement
   }

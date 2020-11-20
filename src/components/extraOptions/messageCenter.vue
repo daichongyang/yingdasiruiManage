@@ -18,52 +18,76 @@
     </div>
       <!-- 水列表部分 -->
       <el-table :data="inforList"  v-if="isActive == 1" style="width: 100%" stripe @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="" label="创建时间">
+            <template slot-scope="scope" v-if="scope.row.gmtCreate">
+            {{$root.getDateArray(scope.row.gmtCreate)[9]}}
+            </template>
+        </el-table-column>
+        <el-table-column prop="" label="修改时间">
+            <template slot-scope="scope" v-if="scope.row.gmtModified">
+                {{$root.getDateArray(scope.row.gmtModified)[9]}}
+            </template>
+        </el-table-column>
+        <el-table-column prop="latitude" label="纬度"></el-table-column>
+        <el-table-column prop="longitude" label="经度"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column prop="score" label="评论"></el-table-column>
+        <el-table-column prop="nickname" label="报警人姓名"></el-table-column>
 
-    <el-table-column prop="" label="创建时间">
-        <template slot-scope="scope" v-if="scope.row.gmtCreate">
-          {{$root.getDateArray(scope.row.gmtCreate)[9]}}
-        </template>
-</el-table-column>
-<el-table-column prop="" label="修改时间">
-    <template slot-scope="scope" v-if="scope.row.gmtModified">
-            {{$root.getDateArray(scope.row.gmtModified)[9]}}
-          </template>
-</el-table-column>
-
-<el-table-column prop="id" label="id"></el-table-column>
-<el-table-column prop="latitude" label="纬度"></el-table-column>
-<el-table-column prop="longitude" label="经度"></el-table-column>
-<el-table-column prop="remark" label="备注"></el-table-column>
-<el-table-column prop="score" label="评论"></el-table-column>
-<el-table-column prop="nickname" label="报警人姓名"></el-table-column>
-
-<el-table-column prop="phone" label="报警人手机号"></el-table-column>
-<el-table-column prop="status" label="状态">
-    <template slot-scope="scope">
-       		{{scope.row.status==1?"未处理":scope.row.status==2?"处理中":"处理完成"}}
-       	</template>
-</el-table-column>
-<el-table-column prop="userId" label="用户"></el-table-column>
-<el-table-column label="操作" fixed="right" width=250>
-    <template slot-scope="scope">
-
-            <el-button type="warning" size="small" @click="updateShowBox(scope.row.id)">{{scope.row.status==1?"未处理":scope.row.status==2?"处理中":"处理完成"}}</el-button>
-          </template>
-</el-table-column>
-</el-table>
-<!-- 批量删除，下标页码 -->
-<el-col :span="24" class="paginationt">
-    <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :page-count="total" class="pagination">
-    </el-pagination>
-</el-col>
-<div id="query">
-    <canvas id="canvas"></canvas>
-</div>
-<!-- <div>
-            <button @click="send">发消息</button>
-            <button @click="getMessage">发消息1</button>
-
-        </div> -->
+        <el-table-column prop="phone" label="报警人手机号"></el-table-column>
+        <el-table-column prop="status" label="状态">
+            <template slot-scope="scope">
+                {{scope.row.status==1?"未处理":scope.row.status==2?"处理中":scope.row.status==3?"派单处理中":"处理完成"}}
+            </template>
+        </el-table-column>
+        <!-- <el-table-column prop="userId" label="用户"></el-table-column> -->
+        <el-table-column label="操作" fixed="right" width=250>
+            <template slot-scope="scope">
+                <el-button type="warning" size="small" @click="updateShowBox(scope.row.id)" v-if="scope.row.status==1">处理</el-button>
+                <el-button type="warning" size="small" @click="getJobgoesList(scope.row.id)" v-if="scope.row.status==2">派单</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <!-- 批量删除，下标页码 -->
+    <el-col :span="24" class="paginationt">
+        <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :page-count="total" class="pagination">
+        </el-pagination>
+    </el-col>
+    <div><el-button type="warning" size="small" @click="getupdaalltedata" v-if="isActive==1">确认完成</el-button></div>
+    <div id="query">
+        <canvas id="canvas"></canvas>
+    </div>
+<el-dialog title="派单派工作人员" :visible.sync="addDialog">
+    <div class="cont_box_left">
+        <el-form label-position="right" label-width="110px">
+              <el-table ref="multipleTable" :data="formData1" style="width: 100%" height="300">
+                <el-table-column  width="55" label="编号">
+                    <template slot-scope="scope">
+                      <el-radio v-model="pushInfor.managerid" :label="scope.row.id">{{scope.row.id}}</el-radio>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="phone" label="电话号码"></el-table-column>
+                <el-table-column prop="address" label="地址"></el-table-column>
+                <el-table-column prop="" label="性别">
+                    <template slot-scope="scope">
+                      {{scope.row.sex==1?"男":scope.row.sex==2?"女":"未知"}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="" label="是否离职">
+                    <template slot-scope="scope">
+                      {{scope.row.sex==1?"是":"否"}}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-form>
+    </div>
+    <div slot="footer" class="dialog-footer">
+      <el-button size="medium " @click="addDialog = false">取 消</el-button>
+      <el-button size="medium " @click="addList()">派单</el-button>
+    </div>
+  </el-dialog>
 </section>
 </template>
 <script>
@@ -71,6 +95,9 @@
     // import {getDateArray} from '../../util/util'
     import {
         sosQuery,
+        jobgoesList,
+        updatalarData,
+        updaalltedata,
         updateSosById
     } from '../../url/api'
     export default {
@@ -79,6 +106,7 @@
                 isActive: 1,
                 total: 1,
                 inforList: [], //数据
+                formData1: [], //数据
                 pages: 1, //总页码数
                 apartmentId: '',
                 formSearch: {
@@ -87,7 +115,7 @@
                 },
                 addORupdate: 0,
                 addFormVisible1: false,
-                updataVisible: false,
+                addDialog: false,
                 selectArr: [],
                 getGateWayList: [], //网关列表
                 sels: [], //列表选中列
@@ -109,13 +137,64 @@
                     comment: "",
                     remark: ""
                 },
-                updataForm: {},
+                pushInfor: {},
                 noRead: {},
                 path: "ws://192.168.0.142:8082/park/ist?appId=" + sessionStorage.getItem('Authorization'),
                 socket: ""
             }
         },
         methods: {
+            getupdaalltedata(){//确认完成
+                let params = []
+
+                this.deleBatch.forEach(item=>{
+                    if(item.status==3){
+                        params.push(item.id)
+                    }else{
+                        this.$message("只能勾选派单中的对象")
+                        return  false
+                    }
+
+                })
+                if(params.length==0){
+                    return
+                }
+                updaalltedata(params).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.$message("操作成功")
+                        this.getList()
+                    }else{
+                        this.$message("操作失败")
+                    }
+                })
+            },
+            getJobgoesList(id){//查询工作人员无分页列表
+                this.pushInfor.id = id
+                this.addDialog = true
+                let params = {
+                    size:1,
+                    current:10,
+                }
+                jobgoesList(params).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.formData1 = res.data.data
+                    }
+                })
+            },
+            addList(){//派单派工作人员
+                updatalarData(this.pushInfor).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.$message("派单成功")
+                        this.getList()
+                    }else{
+                        this.$message("派单失败")
+                    }
+                })
+                this.addDialog = false
+            },
             init: function() {
                 if (typeof(WebSocket) === "undefined") {
                     alert("您的浏览器不支持socket")
@@ -152,6 +231,8 @@
             //未读条数提醒
             changeActive(val) {
                 this.isActive = val　
+            },
+            getList(){
                 sosQuery(this.formSearch).then((res) => {
                     console.log(res)
                     if (res.data.code == 200) {
@@ -162,29 +243,11 @@
                     } else {
                         this.$message(res.data.msg);
                     }
-                })　　　　
-            },
-
-
-            addShebei() { //显示添加设备弹框
-                this.addORupdate = 0
-                this.addForm = {}
-                this.addFormVisible1 = true
-
+                })
             },
             handleSelectionChange(val, self) { //多选
                 this.deleBatch = val
                 console.log(this.deleBatch)
-            },
-            changeItem(index, row) { //修改
-                this.addFormVisible = true
-                this.addForm.apartmentName = row.apartmentName
-                this.addForm.remark = row.remark
-                this.addForm.linkman = row.linkman
-                this.addForm.phone = row.phone
-                this.addForm.createTime = row.createTime
-                this.addForm.comment = row.comment
-                this.addForm.reservationId = row.reservationId
             },
             updateShowBox(ids) { //报警
                 let arrId = []
@@ -204,28 +267,11 @@
                             console.log(res)
                             if (res.data.code == 200) {
                                 this.$message('受理成功');
-                                this.changeActive(1)
+                                this.getList()
                             }
                         })
                     })
                     .catch(_ => {});
-            },
-
-            pushInfor() {
-                let params = {
-                    reservationId: this.addForm.reservationId,
-                    remark: this.addForm.remark,
-                }
-                console.log(params)
-                reservationRemark(params).then(res => {
-                    console.log(res)
-                    this.addFormVisible = false
-                    if (res.data.code === 200) {
-                        this.getList()
-                    } else {
-                        alert(res.data.msg)
-                    }
-                })
             },
             useqrcode() {
                 //生成的二维码内容，可以添加变量
@@ -290,7 +336,7 @@
         mounted() {
             // this.useqrcode()
             // this.messageUnreadd()
-            this.changeActive(1)
+            this.getList()
 
             /* this.open() */
             this.init()
