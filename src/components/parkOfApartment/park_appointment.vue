@@ -38,12 +38,12 @@
           {{$root.getDateArray(scope.row.outofserviceHoursjs)[9]}}
         </template>
     </el-table-column>
-    <el-table-column label="操作" fixed="right" width=250>
+    <el-table-column label="操作" fixed="right" width=150>
         <template slot-scope="scope">
-            <!-- <el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
-            <el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button> -->
+            <!-- <el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button> -->
+            <el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
             <!-- <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button> -->
-            <el-button type="primary" size="small" @click="fanhao.id=scope.row.id,fanhaoDialog=true">放号</el-button>
+            <el-button type="primary" size="small" @click="fanhao.id=scope.row.id,fanhaoDialog=true,getonckieAallocation(scope.row.id)">放号</el-button>
         </template>
     </el-table-column>
 </el-table>
@@ -70,7 +70,7 @@
           <el-table-column prop="contactNumber" label="联系电话"></el-table-column>
           <el-table-column prop="label" label="标签"></el-table-column>
         </el-table>
-        <el-form  :inline="true" class="el_input200" label-position="right" label-width="120px" :model="formPush" :rules="rules" ref='addList'>
+        <el-form :inline="true" class="el_input200" label-position="right" label-width="120px" :model="formPush" :rules="rules" ref='addList'>
             <el-form-item label="最小时间段" style="margin-top:20px;">
                 <el-input v-model="formPush.appointmentTime" placeholder="单位（分钟）"></el-input>
                 <!-- <span>分</span> -->
@@ -111,17 +111,22 @@
 <el-dialog title="放号" :visible.sync="fanhaoDialog">
     <div class="cont_box_left">
         <el-form label-position="right" label-width="130px">
-            <el-form-item label="放号天数开始时间">
-                <el-date-picker type="date" v-model="fanhao.startTime" value-format="timestamp" placeholder="放号天数开始时间"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="放号天数结束时间">
-                <el-date-picker type="date" v-model="fanhao.numberofTime" value-format="timestamp" placeholder="放号天数结束时间"></el-date-picker>
-            </el-form-item>
+          <el-form-item label="放号天数" class="fanghao_time">
+            <el-date-picker
+              v-model="fanghaoDate"
+              @change="getfanghaoDate"
+              type="daterange"
+              value-format="timestamp"
+              :picker-options="pickerOptions1"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </el-form-item>
         </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
       <el-button size="medium " @click="fanhaoDialog = false">取 消</el-button>
-      <el-button size="medium " @click="getnumberAallocation">新 增</el-button>
+      <el-button size="medium " @click="getnumberAallocation">放 号</el-button>
     </div>
   </el-dialog>
 </section>
@@ -132,14 +137,24 @@
     import paging from '../paging'
     import {
         appointmentListData,
+        delectAallocation,
         appointmentList,
         appointmentAdd,
+        onckieAallocation,
         numberAallocation,
-        delParklist
     } from '../../url/api';
     export default {
         data() {
             return {
+                defineDate:[1608134400000,1608480000000,1606233600000],
+                pickerOptions: {
+                  disabledDate(time) {
+                    let curDate = (new Date()).getTime();
+                    let adate =  24 * 3600 * 1000-10;
+                    return time.getTime() == 1606233600000;
+                  }
+                },
+                fanghaoDate:[],
                 deleBatch: [],
                 formSearch: { //查询条件
                     current: 1,
@@ -177,7 +192,7 @@
                     token: sessionStorage.getItem('token')
                 },
                 showAddBtn:true,//显示添加按钮
-                showDelBtn:false,//显示批量删除按钮
+                showDelBtn:true,//显示批量删除按钮
                 formItems:{//搜索模块label
                   formItemsArr:[
                     {
@@ -300,9 +315,49 @@
                 fanhao:{}
             }
         },
+        computed:{
+          pickerOptions1(){
+            let _this = this
+            let obj = {
+              disabledDate(time){
+                let b=''
+                _this.defineDate.forEach((item,index)=>{
+                    b = b+'time.getTime()=='+item+'||';
+                })
+                b= b+'time.getTime()<(new Date()).getTime()-24 * 3600 * 1000'
+                let a = eval(b);
+                return a;
+              }
+            }
+            return obj
+          }
+        },
         methods: {
+          getonckieAallocation(id){//放号时间限制
+            let params = {
+              id:id
+            }
+            onckieAallocation(params).then(res=>{
+              console.log(res)
+              if(res.data.code == 200){
+                this.defineDate=res.data.data
+              }
+            })
+          },
+          getfanghaoDate(val){ 
+            
+            this.fanhao.startTime = val[0]
+            this.fanhao.numberofTime = val[1]
+            console.log(val,this.fanhao)
+          },
           getnumberAallocation(){//放号
             let params = this.fanhao
+            this.defineDate.forEach(item=>{
+              if(item<this.fanhao.numberofTime&&item>=this.fanhao.startTime){
+                this.$message("选中的时间段不可用")
+                return
+              }
+            })
             numberAallocation(params).then(res=>{
               if(res.data.code == 200){
                 this.$message("放号成功")
@@ -413,7 +468,7 @@
                 }
                 this.$confirm('确认删除吗？')
                     .then(_ => {
-                        delParklist(arrId).then((res) => {
+                        delectAallocation(arrId).then((res) => {
                             console.log(res)
                             if (res.data.code == 200) {
                                 this.$message('删除成功');

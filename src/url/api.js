@@ -188,6 +188,7 @@ export const Facilitiessave = (params) => { return axios.post('/park/facilities/
 export const Facilitiesupdate = (params) => { return axios.post('/park/facilities/update', params) } //修改智能设施
 export const Facilitiesdelect = (params) => { return axios.post('/park/facilities/delete', params) } //删除智能设施
 
+export const Wayplanupdate = (params) => { return axios.post('/park/way/plan/update', params) } //添加导航路线
 export const Wayplansave = (params) => { return axios.post('/park/way/plan/save', params) } //添加导航路线
 export const selectPlan = (params) => { return axios.post('/park/way/plan/select', params) } //查询导航路线
 export const assetSelect = (params) => { return axios.post('/park/park/select/assets', params) } //公园内设施列表
@@ -230,3 +231,5 @@ export const jobgoesList = (params) => { return axios.post('/park/jobgoes/list/p
 export const updatalarData = (params) => { return axios.post('/park/jobgoes/jobgoeslist/updatalarData', params) } //派单派工作人员
 export const updaalltedata = (params) => { return axios.post('/park/jobgoes/jobgoeslist/updaalltedata', params) } //确定完成派单
 export const numberAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/numberAallocation', params) } //放号
+export const delectAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/delectAallocation', params) } //删除公园预约列表
+export const onckieAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/onckieAallocation', params) } //放号天

@@ -70,9 +70,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="营业时间">
-
-                <el-date-picker            v-model="formPush.businessHours"            type="datetime"           value-format="timestamp"            placeholder="营业时间">
-                </el-date-picker>
+                <el-date-picker v-model="formPush.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间">
+            </el-date-picker>
             </el-form-item>
             <el-form-item label="客服电话">
                 <el-input v-model="formPush.contactNumber"></el-input>
@@ -115,7 +114,7 @@
 <el-dialog title="修改" :visible.sync="updateDialog">
     <div class="cont_box_left">
         <el-form label-position="right" :rules="rules" label-width="110px" :model="formUpdate" ref='formUpdate'>
-            <div id="container"></div>
+            <div id="container1"></div>
             <el-form-item label="公园名称" prop="name">
                 <el-input v-model="formUpdate.name"></el-input>
             </el-form-item>
@@ -123,10 +122,7 @@
                 <el-input v-model="formUpdate.address"></el-input>
             </el-form-item>
             <el-form-item label="营业时间">
-
-                <el-date-picker            v-model="formUpdate.businessHours"            type="datetime"            value-format="timestamp"            placeholder="营业时间">
-                </el-date-picker>
-
+                <el-date-picker v-model="formUpdate.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="所属归类" size="small">
                 <el-select v-model="formUpdate.assetsClassifyId" placeholder="请选择分类">
@@ -191,7 +187,7 @@
             return {
                 imageUrl: '',
                 allSelect: [],
-                option1: [],
+                mapObj: '',
                 deleBatch: [],
                 isGetFather: false, //是否选中
                 formSearch: { //查询条件
@@ -255,18 +251,24 @@
             }
         },
         methods: {
-            initTmap() {
+            initTmap(containerId) {
+                let container = containerId||'container1'
+                if(this.mapObj){
+                    console.log("地图已存在")
+                    this.mapObj.destroy()
+                }
                 let address = "";
                 let that = this;
                 TMap.init().then((TMap) => {
                     var center = new TMap.LatLng(22.831779, 114.980945);
                     //初始化地图
-                    var map = new TMap.Map("container", {
+                    var map = new TMap.Map(container, {
                         rotation: 20, //设置地图旋转角度
                         pitch: 0, //设置俯仰角度（0~45）
                         zoom: 17, //设置地图缩放级别
                         center: center //设置地图中心点坐标
                     });
+                    that.mapObj = map
                     TMap.ImageTileLayer.createCustomLayer({
                         layerId: '5f6b13185922',
                         // layerId: '5f5f2ad23757',
@@ -286,7 +288,6 @@
                         that.formPush.longitude = e.latLng.getLng();
                         that.formUpdate.latitude = e.latLng.getLat();
                         that.formUpdate.longitude = e.latLng.getLng();
-
                                  
                         console.log(e.latLng.getLng() +  ','  +  e.latLng.getLat())          
                     });  
@@ -352,7 +353,7 @@
             },
             showAdd() {
                 this.addDialog = true
-                this.initTmap()
+                this.initTmap('container')
             },
             addList(addList) { //添加
                 this.$refs[addList].validate((valid) => {
@@ -458,8 +459,7 @@
             },
             handleCurrentPage(val) { //页码改变
                 this.formSearch.current = val
-                this.getInit()
-
+                this.getlist()
             },
             checkTreeInfor(data, ev) { //监听树状图勾选
                 // console.log(ev);
@@ -471,7 +471,7 @@
                 }
             },
             updateShowBox(item) { //修改东西弹窗
-
+                this.initTmap()
                 this.formUpdate = {
                     address: item.address,
                     name: item.name,
@@ -491,7 +491,7 @@
                 }
                 this.imageUrl = item.coverImg
                 this.updateDialog = true
-                this.initTmap()
+                
                 if (item.picture) {
                     item.picture.split(',').forEach(item => {
                         let obj = {
@@ -585,7 +585,7 @@
         margin-bottom: 20px;
     }
     
-    #container {
+    #container,#container1 {
         width: 100%;
         height: 200px;
     }

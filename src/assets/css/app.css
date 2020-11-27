@@ -295,3 +295,11 @@ input::placeholder {
 #container {
     margin-bottom: 20px;
 }
+
+.fanghao_time .el-input__inner {
+    max-width: 400px;
+}
+
+.el-date-editor .el-range-input {
+    color: #a1d6f4;
+}

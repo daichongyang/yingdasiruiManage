@@ -24,36 +24,35 @@
         <template slot-scope="scope" v-if="scope.row.businessHours">
           {{$root.getDateArray(Number(scope.row.businessHours))[9]}}
         </template>
-</el-table-column>
-<el-table-column prop="contactNumber" label="联系电话"></el-table-column>
-<!--    <el-table-column prop="coverImg"label="公园封面图片"></el-table-column>
-      <el-table-column prop="coverVideo"label="宣传视频"></el-table-column> -->
-<el-table-column prop="creator" label="创建者"></el-table-column>
-<el-table-column prop="description" label="描述"></el-table-column>
-<el-table-column prop="gmtCreate" label="创建时间">
-    <template slot-scope="scope" v-if="scope.row.gmtCreate">
-          {{$root.getDateArray(scope.row.gmtCreate)[9]}}
+    </el-table-column>
+    <el-table-column prop="contactNumber" label="联系电话"></el-table-column>
+    <!--    <el-table-column prop="coverImg"label="公园封面图片"></el-table-column>
+        <el-table-column prop="coverVideo"label="宣传视频"></el-table-column> -->
+    <el-table-column prop="creator" label="创建者"></el-table-column>
+    <el-table-column prop="description" label="描述"></el-table-column>
+    <el-table-column prop="gmtCreate" label="创建时间">
+        <template slot-scope="scope" v-if="scope.row.gmtCreate">
+            {{$root.getDateArray(scope.row.gmtCreate)[9]}}
         </template>
-</el-table-column>
-<el-table-column prop="gmtModified" label="修改时间">
-    <template slot-scope="scope" v-if="scope.row.gmtModified">
-       {{$root.getDateArray(scope.row.gmtModified)[9]}}
-     </template>
-</el-table-column>
+    </el-table-column>
+    <el-table-column prop="gmtModified" label="修改时间">
+        <template slot-scope="scope" v-if="scope.row.gmtModified">
+        {{$root.getDateArray(scope.row.gmtModified)[9]}}
+        </template>
+    </el-table-column>
 
-<el-table-column prop="id" label="公园id"></el-table-column>
-<!--  <el-table-column prop="intro"label="简介"></el-table-column> -->
-<el-table-column prop="label" label="标签"></el-table-column>
-<el-table-column prop="name" label="公园名称"></el-table-column>
-<el-table-column prop="updator" label="更新者"></el-table-column>
-<el-table-column label="操作" fixed="right" width=250>
-    <template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
-          <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button>
-
-				</template>
-</el-table-column>
+    <el-table-column prop="id" label="公园id"></el-table-column>
+    <!--  <el-table-column prop="intro"label="简介"></el-table-column> -->
+    <el-table-column prop="label" label="标签"></el-table-column>
+    <el-table-column prop="name" label="公园名称"></el-table-column>
+    <el-table-column prop="updator" label="更新者"></el-table-column>
+    <el-table-column label="操作" fixed="right" width=250>
+        <template slot-scope="scope">
+            <el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
+            <el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+            <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button>
+        </template>
+    </el-table-column>
 </el-table>
 <!-- <div class="pagination">
       <span class="total">总条数：{{total}} 条</span>
@@ -67,7 +66,7 @@
         :total="total">
       </el-pagination>
     </div> -->
-<paging @changePage=handleCurrentPage :get-total='total'></paging>
+<paging @changePage='handleCurrentPage' :get-total='total'></paging>
 
 <!-- 添加 -->
 <el-dialog title="新增" :visible.sync="addDialog">
@@ -81,12 +80,8 @@
             <el-form-item label="地址">
                 <el-input v-model="formPush.address"></el-input>
             </el-form-item>
-
             <el-form-item label="营业时间">
-
-                <el-date-picker           v-model="formPush.businessHours"           type="datetime"           value-format="timestamp"           placeholder="营业时间">
-                </el-date-picker>
-
+                <el-date-picker v-model="formPush.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="客服电话">
                 <el-input v-model="formPush.contactNumber"></el-input>
@@ -148,6 +143,7 @@
 <el-dialog title="修改" :visible.sync="updateDialog">
     <div class="cont_box_left">
         <el-form label-position="right" :rules="rules" label-width="110px" :model="formUpdate" ref='formUpdate'>
+            <div id="container1"></div>
             <el-form-item label="公园名称" prop="name">
                 <el-input v-model="formUpdate.name"></el-input>
             </el-form-item>
@@ -156,7 +152,7 @@
             </el-form-item>
             <el-form-item label="营业时间">
 
-                <el-date-picker           v-model="formUpdate.businessHours"           type="datetime"           value-format="timestamp"           placeholder="营业时间">
+                <el-date-picker v-model="formUpdate.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间">
                 </el-date-picker>
 
             </el-form-item>
@@ -225,7 +221,7 @@
             return {
                 imageUrl: '',
                 allSelect: [],
-                option1: [],
+                mapObj: '',
                 deleBatch: [],
                 typeList: [],
                 isGetFather: false, //是否选中
@@ -239,15 +235,14 @@
                     size: 10
                 },
                 formPush: { //信息提交
-                    latitude: 11,
-                    longitude: 11
-                }, //表单提交
+                    latitude: "",
+                    longitude: ""
+                }, 
                 formData: [], //数据
                 formData1: [], //数据
                 formUpdate: {}, //修改表单
                 total: 0, //数据总数
                 total1: 0, //数据总数
-                pages: 0, //页面总数
                 addDialog: false,
                 updateDialog: false,
                 dataTree: [],
@@ -288,18 +283,24 @@
             }
         },
         methods: {
-            initTmap() {
+            initTmap(containerId) {
+                let container = containerId||'container1'
+                if(this.mapObj){
+                    console.log("地图已存在")
+                    this.mapObj.destroy()
+                }
                 let address = "";
                 let that = this;
                 TMap.init().then((TMap) => {
                     var center = new TMap.LatLng(22.831779, 114.980945);
                     //初始化地图
-                    var map = new TMap.Map("container", {
+                    var map = new TMap.Map(container, {
                         rotation: 20, //设置地图旋转角度
                         pitch: 0, //设置俯仰角度（0~45）
                         zoom: 17, //设置地图缩放级别
                         center: center //设置地图中心点坐标
                     });
+                    that.mapObj=map
                     TMap.ImageTileLayer.createCustomLayer({
                         layerId: '5f6b13185922',
                         // layerId: '5f5f2ad23757',
@@ -335,7 +336,6 @@
                             return item
                         })
                         this.total1 = res.data.data.total
-                        this.pages = res.data.pages
                     } else {
                         this.$message(res.data.msg);
                     }
@@ -347,7 +347,8 @@
             },
             showAdd() {
                 this.addDialog = true
-                this.initTmap()
+                this.initTmap('container')
+                
             },
             onChange(file, fileList) {
                 console.log(file, fileList)
@@ -496,7 +497,7 @@
             },
             handleCurrentPage(val) { //页码改变
                 this.formSearch.current = val
-                this.getInit()
+                this.getlist()
 
             },
             checkTreeInfor(data, ev) { //监听树状图勾选

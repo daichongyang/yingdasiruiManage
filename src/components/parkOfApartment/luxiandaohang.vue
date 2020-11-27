@@ -38,24 +38,24 @@
       <!-- 右边信息 -->
     <div class="right_infor">
         <el-form label-position="right" label-width="90px" :model="formPush" ref='formUpdate'>
-          <el-form-item label="请选择起点" size="small" prop="xqId">
-            <el-select v-model="formPush.startId" @change="getlisttype1">
-              <el-option v-for="(item,index) in asset" :label="item.name" :value="item.id" :key="index" ></el-option>
+          <el-form-item label="请选择起点" size="small">
+            <el-select v-model="startIdIndex" @change="getlisttype1">
+              <el-option v-for="(item,index) in asset" :label="item.name" :value="index" :key="index" ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="请选择终点" size="small" prop="xqId">
-            <el-select v-model="formPush.endId" @change="getlisttype2">
-              <el-option v-for="(item,index) in asset" :label="item.name" :value="item.id" :key="index"></el-option>
+          <el-form-item label="请选择终点" size="small">
+            <el-select v-model="endIdIndex" @change="getlisttype2">
+              <el-option v-for="(item,index) in asset" :label="item.name" :value="index" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
       <div class="font_size" v-for="(item,index) in formPush.points" :key="index" style="margin-bottom:10px;">
         <p>进度:{{item.latitude}}</p>
-         <p>进度:{{item.longitude}}</p>
-       </div>
+        <p>进度:{{item.longitude}}</p>
+      </div>
        <div slot="footer" class="dialog-footer">
 
-         <el-button size="medium " @click="addList('addList')">新 增</el-button>
+         <el-button size="small" @click="addList('addList')">新 增</el-button>
          <el-button type="primary" plain size="small" @click="yulan">预览</el-button>
 
        </div>
@@ -80,6 +80,8 @@
           current: 1,
           size: 10
         },
+        startIdIndex:'',
+        endIdIndex:'',
         asset:[],
         formUpdate:{
           points:[]
@@ -117,38 +119,33 @@
         })
       },
     getlisttype1(val){//选中起始点
-      console.log(val)
+      console.log(val,this.asset[val])
       let _this = this
       let position = {}
-      this.asset.forEach(item=>{
-        if(val == item.id){
-          _this.formPush.startType = item.type
-          position={
-          lat:item.latitude,
-          lng:item.longitude,
-        }
-        _this.startlt.latitude=item.latitude
-        _this.startlt.longitude=item.longitude
-        }
-      })
+      
+      this.formPush.startType = this.asset[val].type
+      this.formPush.startId = this.asset[val].id
+      position={
+        lat:this.asset[val].latitude,
+        lng:this.asset[val].longitude,
+      }
+      this.startlt.latitude=this.asset[val].latitude
+      this.startlt.longitude=this.asset[val].longitude
       this.mapObj.setCenter(new TMap.LatLng(position.lat,position.lng));//设置地图的中心位置
     },
      getlisttype2(val){//选中终点
        console.log(val)
        let _this = this
        let position = {}
-        this.asset.forEach(item=>{
-          if(val == item.id){
-            _this.formPush.endType = item.type
-           position={
-            lat:item.latitude,
-            lng:item.longitude,
-          }
-          _this.endlt.latitude=item.latitude
-          _this.endlt.longitude=item.longitude
-          }
-        })
-        this.mapObj.setCenter(new TMap.LatLng(position.lat,position.lng));//设置地图的中心位置
+      this.formPush.endType = this.asset[val].type
+      this.formPush.endId = this.asset[val].id
+      position={
+        lat:this.asset[val].latitude,
+        lng:this.asset[val].longitude,
+      }
+      this.endlt.latitude=this.asset[val].latitude
+      this.endlt.longitude=this.asset[val].longitude
+      this.mapObj.setCenter(new TMap.LatLng(position.lat,position.lng));//设置地图的中心位置
      },
       addList(addList){//添加
         // if(this.endlt){

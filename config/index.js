@@ -13,11 +13,10 @@ module.exports = {
         proxyTable: {
             '/park': {
                 // target: 'http://192.168.0.172:8081',
-                target: 'http://192.168.0.194:8081/park',
-                // target: 'http://192.168.0.184:8081/park',
+                target: 'http://192.168.0.110:8081/park',
+                // target: 'http://192.168.0.181:8081/park',
                 // target: 'http://192.168.0.245:8081/park',
                 // target: 'http://192.168.0.143:8082/park',
-                // target: 'http://www.ubicell.com:8080/apartment',
                 // target: 'http://www.ubicell.cn:8080/park',
                 changeOrigin: true,
                 pathRewrite: {
@@ -27,7 +26,7 @@ module.exports = {
         },
 
         // Various Dev Server settings
-        host: '192.168.0.190', // can be overwritten by process.env.HOST
+        host: '192.168.0.197', // can be overwritten by process.env.HOST
         port: 8088, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
         autoOpenBrowser: false,
         errorOverlay: true,

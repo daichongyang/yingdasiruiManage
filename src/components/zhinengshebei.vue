@@ -7,7 +7,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="showAdd">添 加</el-button>
@@ -66,11 +66,11 @@
           </el-form-item>
           <el-form-item label="营业时间" >
              <el-date-picker
-                      v-model="formPush.businessHours"
-                      type="datetime"
-                      value-format="timestamp"
-                      placeholder="营业时间">
-                    </el-date-picker>
+                v-model="formPush.businessHours"
+                type="datetime"
+                value-format="timestamp"
+                placeholder="营业时间">
+              </el-date-picker>
           </el-form-item>
           <el-form-item label="客服电话">
             <el-input v-model="formPush.contactNumber"></el-input>
@@ -134,11 +134,11 @@
           </el-form-item>
       <el-form-item label="营业时间" >
          <el-date-picker
-                  v-model="formUpdate.businessHours"
-                  type="datetime"
-                  value-format="timestamp"
-                  placeholder="营业时间">
-                </el-date-picker>
+            v-model="formUpdate.businessHours"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="营业时间">
+          </el-date-picker>
 
       </el-form-item>
           <el-form-item label="客服电话">
@@ -252,8 +252,8 @@ export default {
       rules: {
 
           name:[{ required: true, message: '该项不能为空',trigger: 'change'}],
-            coverImg:[{ required: true, message: '该项不能为空',trigger: 'change'}],
-              coverVideo:[{ required: true, message: '该项不能为空',trigger: 'change'}],
+          coverImg:[{ required: true, message: '该项不能为空',trigger: 'change'}],
+          coverVideo:[{ required: true, message: '该项不能为空',trigger: 'change'}],
       },
     }
   },
@@ -276,7 +276,7 @@ export default {
       })
     },
   initTmap(){
-      let address = "";
+         let address = "";
          let that = this;
           TMap.init().then((TMap)=>{
             var center = new TMap.LatLng(39.984104, 116.307503);
@@ -333,17 +333,17 @@ export default {
      console.log(this.formUpdate.coverVideo)
    },
     getlist(){
-   Facilitieslist(this.formSearch).then((res)=>{
-     console.log(res)
-     if(res.data.code == 200){
-       this.formData = res.data.data.records.filter((item)=>{
-         return item
-       })
-       this.total = res.data.data.total
-     }else{
-       this.$message(res.data.msg);
-     }
-   })
+      Facilitieslist(this.formSearch).then((res)=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.formData = res.data.data.records.filter((item)=>{
+            return item
+          })
+          this.total = res.data.data.total
+        }else{
+          this.$message(res.data.msg);
+        }
+      })
     },
     getInit(){//初始化列表
       this.getlist()

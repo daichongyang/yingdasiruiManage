@@ -52,7 +52,7 @@
     </el-table-column>
 </el-table>
 
-<paging @changePage=handleCurrentPage :get-total='total'></paging>
+<paging @changePage='handleCurrentPage' :get-total='total'></paging>
 
 <!-- 添加 -->
 <el-dialog title="新增" :visible.sync="addDialog">
@@ -71,8 +71,7 @@
             </el-select>
           </el-form-item> -->
             <el-form-item label="营业时间">
-
-                <el-date-picker           v-model="formPush.businessHours"           type="datetime"           value-format="timestamp"           placeholder="营业时间">
+                <el-date-picker v-model="formPush.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="客服电话">
