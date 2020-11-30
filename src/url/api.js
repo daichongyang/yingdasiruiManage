@@ -182,6 +182,8 @@ export const Employeelist = (params) => { return axios.post('/park/employee/list
 export const Employeesave = (params) => { return axios.post('/park/employee/save', params) } //添加工作人员
 export const Employeeupdate = (params) => { return axios.post('/park/employee/update', params) } //修改工作人员
 export const Employeedelect = (params) => { return axios.post('/park/employee/delete', params) } //批量删除工作人员
+export const updataState = (params) => { return axios.post('/park/employee/update/state/' + params.employeeId) } //修改工作人员账号状态
+export const updataPassword = (params) => { return axios.post('/park/employee/update/password', params) } //修改工作人员APP登录密码
 
 export const Facilitieslist = (params) => { return axios.post('/park/facilities/list/page', params) } //查询智能设施分页列表
 export const Facilitiessave = (params) => { return axios.post('/park/facilities/save', params) } //添加智能设施

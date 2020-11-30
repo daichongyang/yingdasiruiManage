@@ -146,7 +146,8 @@
     export default {
         data() {
             return {
-                defineDate:[1608134400000,1608480000000,1606233600000],
+                defineDate:[],
+                // defineDate:[1608134400000,1608480000000,1606233600000],
                 pickerOptions: {
                   disabledDate(time) {
                     let curDate = (new Date()).getTime();
@@ -337,6 +338,7 @@
             let params = {
               id:id
             }
+            console.log(id)
             onckieAallocation(params).then(res=>{
               console.log(res)
               if(res.data.code == 200){

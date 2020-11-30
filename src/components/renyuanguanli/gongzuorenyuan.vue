@@ -16,6 +16,13 @@
           <el-option label="女" :value="1"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="登录权限" size="small">
+        <el-select v-model="formSearch.state" placeholder="请选择登录权限">
+          <el-option label="全部" :value="''"></el-option>
+          <el-option label="冻结" :value="0"></el-option>
+          <el-option label="启用" :value="1"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="是否离职" size="small">
         <el-select v-model="formSearch.isLeave" placeholder="请选择是否离职">
           <el-option label="否" :value="0"></el-option>
@@ -23,7 +30,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">添 加</el-button>
@@ -33,148 +40,172 @@
       </el-form-item>
     </el-form>
     <el-table ref="multipleTable" :data="formData" style="width: 100%" stripe @select="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="name" label="姓名"></el-table-column>
-      <el-table-column prop="phone" label="电话号码"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
-      <el-table-column prop="age" label="年龄"></el-table-column>
-       <el-table-column prop="id" label="id"></el-table-column>
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="phone" label="电话号码"></el-table-column>
+        <el-table-column prop="address" label="地址"></el-table-column>
+        <el-table-column prop="age" label="年龄"></el-table-column>
+        <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="isLeave" label="是否离职">
             <template slot-scope="scope">
-                {{scope.row.isLeave==0?"否":scope.row.isLeave==是?"女":"未知"}}
-                </template>
-</el-table-column>
-<el-table-column prop="photo" label="头像" width="100">
-    <template slot-scope="scope">
+                {{scope.row.isLeave==0?"否":"是"}}
+            </template>
+        </el-table-column>
+        <el-table-column prop="state" label="登录权限">
+            <template slot-scope="scope">
+                {{scope.row.state==true?"正常":"冻结"}}
+            </template>
+        </el-table-column>
+        <el-table-column prop="photo" label="头像" width="100">
+            <template slot-scope="scope">
                 <el-image style="width: 70px; height: 70px" :src="scope.row.photo" fit="cover"></el-image>
-                </template>
-</el-table-column>
-<el-table-column prop="remark" label="备注"></el-table-column>
-<el-table-column prop="sex" label="性别">
-    <template slot-scope="scope">
-                    {{scope.row.sex==0?"男":scope.row.sex==1?"女":"未知"}}
-                </template>
-</el-table-column>
-<el-table-column label="操作" fixed="right" width=350>
-    <template slot-scope="scope">
-            <el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
-            <el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
-            <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button>
+            </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column prop="sex" label="性别">
+            <template slot-scope="scope">
+                {{scope.row.sex==1?"男":scope.row.sex==2?"女":"未知"}}
+            </template>
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width=350>
+            <template slot-scope="scope">
+                <el-button type="warning" size="small" @click="updateShowBox(scope.row),detailsDialog = true">修 改</el-button>
+                <el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+                <el-button type="primary" size="small" @click="getUpdataState(scope.row.id)">{{scope.row.state==true?"冻结":"启用"}}</el-button>
+                <el-button type="primary" size="small" @click="changePassword.id=scope.row.id,updateDialog1=true">修改密码</el-button>
+                <!-- <el-button type="primary" size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button> -->
+            </template>
+        </el-table-column>
+    </el-table>
+    <paging @changePage='handleCurrentPage' :get-total='total'></paging>
 
-          </template>
-</el-table-column>
-</el-table>
-<paging @changePage=handleCurrentPage :get-total='total'></paging>
+    <!-- 添加 -->
+    <el-dialog title="新增" :visible.sync="addDialog">
+        <div class="cont_box_left">
+            <el-form label-position="right" label-width="110px" :model="formPush" :rules="rules" ref='addList'>
+                <el-form-item label="年龄">
+                    <el-input v-model="formPush.age"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="formPush.address"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="formPush.email"></el-input>
+                </el-form-item>
+                <el-form-item label="APP登陆密码">
+                    <el-input v-model="formPush.password"></el-input>
+                </el-form-item>
+                <el-form-item label="头像" size="small">
+                    <el-upload class="avatar-uploader" :action="uploadToRealPath" :show-file-list="false" :on-success="handleAvatarSuccess">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="formPush.remark"></el-input>
+                </el-form-item>
+                <el-form-item label="性别" size="small">
+                    <el-select v-model="formPush.sex" placeholder="请选择性别">
+                        <el-option label="男" :value="1"></el-option>
+                        <el-option label="女" :value="2"></el-option>
+                    </el-select>
+                </el-form-item>
 
-<!-- 添加 -->
-<el-dialog title="新增" :visible.sync="addDialog">
-    <div class="cont_box_left">
-        <el-form label-position="right" label-width="110px" :model="formPush" :rules="rules" ref='addList'>
-            <el-form-item label="年龄">
-                <el-input v-model="formPush.age"></el-input>
-            </el-form-item>
-            <el-form-item label="地址">
-                <el-input v-model="formPush.address"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱">
-                <el-input v-model="formPush.email"></el-input>
-            </el-form-item>
-            <el-form-item label="头像" size="small">
-                <el-upload class="avatar-uploader" :action="uploadToRealPath" :show-file-list="false" :on-success="handleAvatarSuccess">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label="备注">
-                <el-input v-model="formPush.remark"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" size="small">
-                <el-select v-model="formPush.sex" placeholder="请选择性别">
-                    <el-option label="男" :value="1"></el-option>
-                    <el-option label="女" :value="2"></el-option>
-                </el-select>
-            </el-form-item>
+                <el-form-item label="身份证">
+                    <el-input v-model="formPush.identityCard"></el-input>
+                </el-form-item>
+                <el-form-item label="岗位" :rows="3">
+                    <el-input v-model="formPush.job"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="formPush.name"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号码">
+                    <el-input v-model="formPush.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="是否离职" size="small">
+                    <el-select v-model="formPush.isLeave" placeholder="请选择是否离职">
+                        <el-option label="否" :value="0"></el-option>
+                        <el-option label="是" :value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="medium " @click="addDialog = false">取 消</el-button>
+            <el-button size="medium " @click="addList('addList')">新 增</el-button>
+        </div>
+    </el-dialog>
 
-            <el-form-item label="身份证">
-                <el-input v-model="formPush.identityCard"></el-input>
-            </el-form-item>
-            <el-form-item label="岗位" :rows="3">
-                <el-input v-model="formPush.job"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名">
-                <el-input v-model="formPush.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号码">
-                <el-input v-model="formPush.phone"></el-input>
-            </el-form-item>
-            <el-form-item label="是否离职" size="small">
-                <el-select v-model="formPush.isLeave" placeholder="请选择是否离职">
-                    <el-option label="否" :value="0"></el-option>
-                    <el-option label="是" :value="1"></el-option>
-                </el-select>
-            </el-form-item>
-        </el-form>
-    </div>
-    <div slot="footer" class="dialog-footer">
-        <el-button size="medium " @click="addDialog = false">取 消</el-button>
-        <el-button size="medium " @click="addList('addList')">新 增</el-button>
-    </div>
-</el-dialog>
+    <!-- 修改 -->
+    <el-dialog title="修改" :visible.sync="updateDialog">
+        <div class="cont_box_left">
+            <el-form label-position="right" :rules="rules" label-width="110px" :model="formUpdate" ref='formUpdate'>
+                <el-form-item label="性别" size="small">
+                    <el-select v-model="formUpdate.sex" placeholder="请选择性别">
+                        <el-option label="男" :value="1"></el-option>
+                        <el-option label="女" :value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="年龄">
+                    <el-input v-model="formUpdate.age"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="formUpdate.address"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="formUpdate.email"></el-input>
+                </el-form-item>
+                <el-form-item label="头像" size="small">
+                    <el-upload class="avatar-uploader" :action="uploadToRealPath" :show-file-list="false" :on-success="handleAvatarSuccess1">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="formUpdate.remark"></el-input>
+                </el-form-item>
+                <el-form-item label="身份证">
+                    <el-input v-model="formUpdate.identityCard"></el-input>
+                </el-form-item>
+                <el-form-item label="岗位" :rows="3">
+                    <el-input v-model="formUpdate.job"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="formUpdate.name"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号码">
+                    <el-input v-model="formUpdate.phone"></el-input>
+                </el-form-item>
 
-<!-- 修改 -->
-<el-dialog title="修改" :visible.sync="updateDialog">
-    <div class="cont_box_left">
-        <el-form label-position="right" :rules="rules" label-width="110px" :model="formUpdate" ref='formUpdate'>
-            <el-form-item label="性别" size="small">
-                <el-select v-model="formUpdate.sex" placeholder="请选择性别">
-                    <el-option label="男" :value="1"></el-option>
-                    <el-option label="女" :value="2"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="年龄">
-                <el-input v-model="formUpdate.age"></el-input>
-            </el-form-item>
-            <el-form-item label="地址">
-                <el-input v-model="formUpdate.address"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱">
-                <el-input v-model="formUpdate.email"></el-input>
-            </el-form-item>
-            <el-form-item label="头像" size="small">
-                <el-upload class="avatar-uploader" :action="uploadToRealPath" :show-file-list="false" :on-success="handleAvatarSuccess1">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label="备注">
-                <el-input v-model="formUpdate.remark"></el-input>
-            </el-form-item>
-            <el-form-item label="身份证">
-                <el-input v-model="formUpdate.identityCard"></el-input>
-            </el-form-item>
-            <el-form-item label="岗位" :rows="3">
-                <el-input v-model="formUpdate.job"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名">
-                <el-input v-model="formUpdate.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号码">
-                <el-input v-model="formUpdate.phone"></el-input>
-            </el-form-item>
+                <el-table-column prop="isLeave" label="性别">
+                    <template slot-scope="scope">
+                        {{scope.row.isLeave==0?"否":scope.row.isLeave==1?"是":"未知"}}
+                        </template>
+                </el-table-column>
 
-            <el-table-column prop="isLeave" label="性别">
-                <template slot-scope="scope">
-                      {{scope.row.isLeave==0?"否":scope.row.isLeave==1?"是":"未知"}}
-                    </template>
-            </el-table-column>
+            </el-form>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="medium" @click="updateDialog = false">取 消</el-button>
+            <el-button size="medium" @click="updateList">确定</el-button>
+        </div>
+    </el-dialog>
+    <!-- 修改密码 -->
+    <el-dialog title="修改密码" :visible.sync="updateDialog1">
+        <div class="cont_box_left">
+            <el-form label-position="right" label-width="110px" :model="formUpdate">
 
-        </el-form>
-    </div>
-    <div slot="footer" class="dialog-footer">
-        <el-button size="medium" @click="updateDialog = false">取 消</el-button>
-        <el-button size="medium" @click="updateList">确定</el-button>
-    </div>
-</el-dialog>
+                <el-form-item label="新密码">
+                    <el-input v-model="changePassword.password"></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="medium" @click="updateDialog1 = false">取 消</el-button>
+            <el-button size="medium" @click="getUpdataPassword">确定</el-button>
+        </div>
+    </el-dialog>
 </section>
 </template>
 
@@ -184,6 +215,8 @@
         Employeelist,
         Employeesave,
         Employeeupdate,
+        updataPassword,
+        updataState,
         Employeedelect
     } from '../../url/api';
     export default {
@@ -213,6 +246,7 @@
                 pages: 0, //页面总数
                 addDialog: false,
                 updateDialog: false,
+                updateDialog1: false,
                 dataTree: [],
                 uploadToRealPath: '/park/upload/file/upload',
                 defaultProps: { //树状图key定义
@@ -248,9 +282,37 @@
                         trigger: 'change'
                     }],
                 },
+                changePassword:{},
             }
         },
         methods: {
+            getUpdataPassword(){//修改密码
+                let params =this.changePassword
+                updataPassword(params).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.$message("修改成功")
+                        this.getlist()
+                    }else{
+                        this.$message("修改失败")
+                    }
+                    this.updateDialog1 = false
+                })
+            },
+            getUpdataState(id){//修改工作人员账号状态
+                let params ={
+                    employeeId:id
+                }
+                updataState(params).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.$message("操作成功")
+                        this.getlist()
+                    }else{
+                        this.$message("操作失败")
+                    }
+                })
+            },
             gethouseLIst() {
                 houseList(this.formSearch1).then((res) => { //房间列表
                     console.log(res)
