@@ -91,10 +91,10 @@
                 <el-input v-model.number="formPush.daysNumberallocation"></el-input>
             </el-form-item> -->
             <el-form-item label="不服务开始时间">
-                <el-time-picker v-model="formPush.outofserviceHoursjs" value-format="timestamp" placeholder="不服务开始时间"></el-time-picker>
+                <el-time-picker v-model="formPush.outofserviceHoursks" value-format="timestamp" placeholder="不服务开始时间"></el-time-picker>
             </el-form-item>
             <el-form-item label="不服务结束时间">
-                <el-time-picker v-model="formPush.outofserviceHoursks" value-format="timestamp" placeholder="不服务结束时间"></el-time-picker>
+                <el-time-picker v-model="formPush.outofserviceHoursjs" value-format="timestamp" placeholder="不服务结束时间"></el-time-picker>
             </el-form-item>
             <el-form-item label="是否可预约">
               <el-radio v-model="formPush.ifappointment" :label="0">未预约</el-radio>
@@ -122,11 +122,14 @@
               end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
+          <el-form-item label="可预约天数">
+            <el-input v-model.number="fanhao.number"></el-input>
+          </el-form-item>
         </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
       <el-button size="medium " @click="fanhaoDialog = false">取 消</el-button>
-      <el-button size="medium " @click="getnumberAallocation">放 号</el-button>
+      <el-button size="medium " @click="getnumberAallocation" :loading="loading">放 号</el-button>
     </div>
   </el-dialog>
 </section>
@@ -146,6 +149,7 @@
     export default {
         data() {
             return {
+                loading:false,
                 defineDate:[],
                 // defineDate:[1608134400000,1608480000000,1606233600000],
                 pickerOptions: {
@@ -353,13 +357,16 @@
             console.log(val,this.fanhao)
           },
           getnumberAallocation(){//放号
+            
             let params = this.fanhao
-            this.defineDate.forEach(item=>{
-              if(item<this.fanhao.numberofTime&&item>=this.fanhao.startTime){
+            let defineDatee = this.defineDate
+            for (let index = 0; index < defineDatee.length; index++) {
+              if(defineDatee[index]<this.fanhao.numberofTime&&defineDatee[index]>=this.fanhao.startTime){
                 this.$message("选中的时间段不可用")
                 return
               }
-            })
+            }
+            this.loading = true
             numberAallocation(params).then(res=>{
               if(res.data.code == 200){
                 this.$message("放号成功")
@@ -368,6 +375,7 @@
               }else{
                 this.$message("放号失败")
               }
+              this.loading = false
             })
           },
             getlist() {
