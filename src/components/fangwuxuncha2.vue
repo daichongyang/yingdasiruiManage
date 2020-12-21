@@ -1,7 +1,7 @@
 <template>
   <section>
       <!-- 导航栏 -->
-    <div class="nav_options">
+    <!-- <div class="nav_options">
       <div class="nav_option" :class="{nav_option_active:checkInfor.status == 0}" @click="checkInfor.status=0">
         <span>当前巡查任务</span>
       </div>
@@ -11,7 +11,7 @@
       <div class="nav_option" :class="{nav_option_active:checkInfor.status == 2}" @click="checkInfor.status=2">
         <span>收到的巡查任务</span>
       </div>
-    </div>
+    </div> -->
     <div class="equi">
       <el-form :inline="true" class="gridContt">
         <el-form :inline="true">
@@ -24,7 +24,7 @@
           <el-form-item label="巡查任务" v-if="checkInfor.status==2">
             <el-input placeholder="输入巡查任务" v-model="checkInfor.cc" size='small'></el-input>
           </el-form-item>
-          <el-form-item label="巡查点"  class="margin0">
+          <el-form-item label="巡查点"  class="xunchaSeach">
             <el-input placeholder="路" size='small' style="width:150px;"></el-input>
             -
             <el-input placeholder="街" size='small' style="width:150px;"></el-input>

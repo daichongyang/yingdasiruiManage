@@ -142,7 +142,7 @@ const ggtz = () =>
 const ggtz2 = () =>
     import ('@/components/ggtz2');
 const service_repair = () =>
-    import ('@/components/bxby');
+    import ('@/components/ziyuanManage/bxby');
 const cggl_tuxing = () =>
     import ('@/components/cggl_tuxing');
 const facility_light = () =>
@@ -177,15 +177,21 @@ const park_management = () =>
 //园区场馆-景点管理
 const park_tourist = () =>
     import ('@/components/parkOfApartment/gongyuanremenjingdian');
+//智能巡查
+const service_intelligent_inspection = () =>
+    import ('@/components/parkOfApartment/service_intelligent_inspection');
+
+const service_periphery = () =>
+    import ('@/components/parkOfApartment/service_periphery');
 //周边介绍
-const service_periphery_presentation = () =>
+const zhoubianjieshao = () =>
     import ('@/components/parkOfApartment/zhoubianjieshao');
 //周边介绍
 const park_appointment = () =>
     import ('@/components/parkOfApartment/park_appointment');
 
 const service_advice = () =>
-    import ('@/components/property/property_complaint_suggestion');
+    import ('@/components/property/service_advice');
 //信息发布通知
 const ips_information = () =>
     import ('@/components/xinxifabu/ips_property');
@@ -228,6 +234,9 @@ const configPeizhi = () =>
 //app广告
 const ips_app_banner = () =>
     import ('@/components/xinxifabu/ips_app_banner');
+//宣传广告
+const ips_advert = () =>
+    import ('@/components/xinxifabu/ips_advert');
 
 Vue.use(Router)
 
@@ -327,6 +336,11 @@ export default new Router({
                             path: '/ips_app_banner',
                             name: 'app广告',
                             component: ips_app_banner,
+                        },
+                        {
+                            path: '/ips_advert',
+                            name: '宣传广告',
+                            component: ips_advert,
                         },
                         {
                             path: '/service_traffic',
@@ -471,9 +485,19 @@ export default new Router({
                             component: park_tourist,
                         },
                         {
-                            path: '/service_periphery_presentation',
+                            path: '/service_intelligent_inspection',
+                            name: '智能巡查',
+                            component: service_intelligent_inspection,
+                        },
+                        {
+                            path: '/zhoubianjieshao',
                             name: '周边介绍',
-                            component: service_periphery_presentation,
+                            component: zhoubianjieshao,
+                        },
+                        {
+                            path: '/service_periphery',
+                            name: '周边介绍',
+                            component: service_periphery,
                         },
                         {
                             path: '/park_appointment',

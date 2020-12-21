@@ -55,13 +55,17 @@ export default {
       type:Boolean,
       default:true
     },
+    formSearch:{
+      type:Object,
+      default:{}
+    },
   },
   data(){
     return{
-      formSearch:{
-        size:10,
-        current:1
-      },
+      // formSearch:{
+      //   size:10,
+      //   current:1
+      // },
     }
   },
   watch:{

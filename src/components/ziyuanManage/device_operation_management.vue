@@ -16,7 +16,7 @@
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form> -->
-    <searchModule  @muchDeleteType="getMuchDeleteType" @searchInfor="getSearchInfor" @addTotrue="getAddTotrue" :formItems="formItems" :showAddBtn="showAddBtn" :showDelBtn="showDelBtn"></searchModule>
+    <searchModule  @muchDeleteType="getMuchDeleteType" @searchInfor="getSearchInfor" @addTotrue="getAddTotrue" :formSearch="formSearch" :formItems="formItems" :showAddBtn="showAddBtn" :showDelBtn="showDelBtn"></searchModule>
     <el-table ref="multipleTable" :data="formData" style="width: 100%" stripe @select="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="name"label="名称"></el-table-column>
@@ -397,13 +397,16 @@ export default {
       }
       
     },
+    showMap(){
+
+    },
     getSearchInfor(val){//从模块中执行查询功能
       this.formSearch=val
       this.getlist()
     },
   },
   mounted(){
-    console.log(this.showBtnFather)
+    // console.log(this.showBtnFather)
     this.getInit()
     // this.initAmap()
   },

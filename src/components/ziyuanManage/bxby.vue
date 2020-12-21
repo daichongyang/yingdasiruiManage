@@ -430,7 +430,7 @@ export default {
         token:sessionStorage.getItem('token')
       },
       imageUrl:'',
-      yunweitype:1,
+      yunweitype:3,
       baojingName:'', 
       showBtnFather:3,
       baojingDialog:false,
@@ -506,7 +506,7 @@ export default {
       deleBatch1:[],
       formSearch:{//查询条件
         current:1,
-        type:1,
+        type:3,
         size: 10
       },
       formSearch1:{//查询条件
@@ -522,7 +522,7 @@ export default {
         size: 10
       },
       formPush:{//信息提交
-        type:1
+        type:3
       },//表单提交
       formData: [],//数据
       formData1: [],//数据

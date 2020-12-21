@@ -10,7 +10,7 @@
           <el-form-item label="电话号码">
             <el-input placeholder="输入电话号码" v-model="checkInfor.tenant" size='small'></el-input>
           </el-form-item>
-          <el-form-item label="巡查点"  class="margin0">
+          <el-form-item label="巡查点" class="xunchaSeach">
             <el-input placeholder="路" size='small' style="width:150px;"></el-input>
             -
             <el-input placeholder="街" size='small' style="width:150px;"></el-input>

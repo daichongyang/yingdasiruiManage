@@ -2,7 +2,7 @@
   <section class="modlude">
     <el-form :inline="true" :model="formSearch" class="form_inline" label-width="80px">
    
-      <el-form-item label="公园周边名称" size="small">
+      <el-form-item label="周边名称" size="small">
         <el-input v-model="formSearch.name" placeholder="请输入公园周边名称"></el-input>
       </el-form-item>
 

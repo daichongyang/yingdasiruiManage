@@ -217,9 +217,9 @@ export const editStaff = (params) => { return axios.post('/park/operation/editSt
 export const addStaff = (params) => { return axios.post('/park/operation/addStaff', params) } //运维管理 增加运维人员
 export const delStaff = (params) => { return axios.post('/park/operation/delStaff', params) } //运维管理 删除运维人员
 
-export const getTask = (params) => { return axios.post('/park/patrol/getTask', params) } //获取运维任务列表
+export const getTask = (params) => { return axios.post('/park/patrol/getTask', params) } //获取任务列表
 export const addTask = (params) => { return axios.post('/park/patrol/addTask', params) } //添加运维任务
-export const editTask = (params) => { return axios.post('/park/patrol/editTask', params) } //编辑运维任务
+export const editTask = (params) => { return axios.post('/park/patrol/editTask', params) } //编辑任务
 export const pauseTask = (params) => { return axios.post('/park/patrol/pause/' + params.taskId) } //运维任务停用
 export const allocatPatrolTask = (params) => { return axios.post('/park/patrol/allocatePatrolTask', params) } //手动分配运维任务给某人
 export const getPatrolDetails = (params) => { return axios.post('/park/patrol/getPatrolDetails', params) } //后台调用：运维详情

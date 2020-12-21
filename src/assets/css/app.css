@@ -300,6 +300,10 @@ input::placeholder {
     max-width: 400px;
 }
 
+.xunchaSeach .el-input__inner {
+    min-width: 150px;
+}
+
 .el-date-editor .el-range-input {
     color: #a1d6f4;
 }

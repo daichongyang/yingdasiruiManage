@@ -14,7 +14,7 @@ module.exports = {
             '/park': {
                 // target: 'http://192.168.0.172:8081',
                 // target: 'http://192.168.0.110:8082/park',
-                // target: 'http://192.168.0.146:8081/park',
+                // target: 'http://192.168.0.143:8082/park',
                 // target: 'http://192.168.0.245:8081/park',
                 // target: 'http://192.168.0.143:8082/park',
                 target: 'http://www.ubicell.cn:8080/park',
