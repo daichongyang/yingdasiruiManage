@@ -72,10 +72,10 @@
             <el-input v-model="formPush.title"></el-input>
           </el-form-item>
           <el-form-item label="详细内容">
-            <el-input v-model="formPush.content"></el-input>
+            <el-input v-model="formPush.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="摘要">
-            <el-input v-model="formPush.summary"></el-input>
+            <el-input v-model="formPush.summary" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <!-- <el-form-item label="所属归类" size="small">
             <el-select v-model="formPush.assetsClassifyId" placeholder="请选择分类">
@@ -113,10 +113,10 @@
             <el-input v-model="formUpdate.title"></el-input>
           </el-form-item>
           <el-form-item label="详细内容">
-            <el-input v-model="formUpdate.content"></el-input>
+            <el-input v-model="formUpdate.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="摘要">
-            <el-input v-model="formUpdate.summary"></el-input>
+            <el-input v-model="formUpdate.summary" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="图片" size="small" prop="picture">
             <el-upload

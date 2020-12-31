@@ -89,7 +89,7 @@
                 </el-upload>
             </el-form-item>
             <el-form-item label="简介" :rows="3">
-                <el-input v-model="formPush.intro"></el-input>
+                <el-input v-model="formPush.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="标签">
                 <el-input v-model="formPush.label"></el-input>
@@ -155,7 +155,7 @@
                 <el-input v-model="formUpdate.id"></el-input>
             </el-form-item>
             <el-form-item label="简介" :rows="9">
-                <el-input v-model="formUpdate.intro"></el-input>
+                <el-input v-model="formUpdate.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="标签">
                 <el-input v-model="formUpdate.label"></el-input>

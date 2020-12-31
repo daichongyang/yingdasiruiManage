@@ -113,10 +113,10 @@
 
 
             <el-form-item label="描述">
-                <el-input v-model="formPush.description"></el-input>
+                <el-input v-model="formPush.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="简介" :rows="3">
-                <el-input v-model="formPush.intro"></el-input>
+                <el-input v-model="formPush.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="标签">
                 <el-input v-model="formPush.label"></el-input>
@@ -171,13 +171,13 @@
             </el-form-item>
 
             <el-form-item label="描述">
-                <el-input v-model="formUpdate.description"></el-input>
+                <el-input v-model="formUpdate.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="公园id">
                 <el-input v-model="formUpdate.id"></el-input>
             </el-form-item>
             <el-form-item label="简介" :rows="2">
-                <el-input v-model="formUpdate.intro"></el-input>
+                <el-input v-model="formUpdate.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="标签">
                 <el-input v-model="formUpdate.label"></el-input>

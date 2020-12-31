@@ -237,6 +237,12 @@ const ips_app_banner = () =>
 //宣传广告
 const ips_advert = () =>
     import ('@/components/xinxifabu/ips_advert');
+//办公任务
+const service_office_task = () =>
+    import ('@/components/ziyuanManage/service_office_task');
+//报警受理
+const service_intelligent_alarm = () =>
+    import ('@/components/ziyuanManage/service_intelligent_alarm');
 
 Vue.use(Router)
 
@@ -254,7 +260,6 @@ export default new Router({
                     name: 'index',
                     component: index,
                 },
-
                 {
                     path: '/formApart',
                     name: '',
@@ -276,6 +281,16 @@ export default new Router({
                             path: '/mapPoints',
                             name: '地图',
                             component: mapPoints,
+                        },
+                        {
+                            path: '/service_intelligent_alarm',
+                            name: '智慧报警',
+                            component: service_intelligent_alarm,
+                        },
+                        {
+                            path: '/service_office_task',
+                            name: '办公任务',
+                            component: service_office_task,
                         },
                         {
                             path: '/device_operation_add',

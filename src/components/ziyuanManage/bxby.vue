@@ -79,7 +79,7 @@
     </el-table>
     <paging @changePage = handleCurrentPage :get-total='total'></paging>
     <!-- 添加 -->
-    <el-dialog title="增加运维人员" :visible.sync="addDialog">
+    <el-dialog title="增加" :visible.sync="addDialog">
       <div class="cont_box_left">
         <el-form label-position="right" label-width="110px" :model="formPush" :rules="rules"  ref='addList'>
           <el-form-item label="名称" prop="name">
@@ -137,7 +137,7 @@
           </el-form-item>
 
           <el-form-item label="维修描述" v-if="yunweitype == 3">
-            <el-input v-model="formPush.content"></el-input>
+            <el-input v-model="formPush.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="开始时间" v-if="yunweitype == 2||yunweitype == 3||yunweitype == 5">
             <el-date-picker
@@ -224,7 +224,7 @@
           </el-form-item>
 
           <el-form-item label="维修描述" v-if="yunweitype == 3">
-            <el-input v-model="formUpdate.content"></el-input>
+            <el-input v-model="formUpdate.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="开始时间" v-if="yunweitype == 2||yunweitype == 3||yunweitype == 5">
             <el-date-picker
@@ -448,7 +448,7 @@ export default {
             type:'datePicker'
           },
           {
-            name:'姓名',
+            name:'名称',
             filed:"name",
             type:'text'
           },

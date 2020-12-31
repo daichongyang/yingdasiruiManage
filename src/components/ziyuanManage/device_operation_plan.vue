@@ -137,7 +137,7 @@
           </el-form-item>
 
           <el-form-item label="维修描述" v-if="yunweitype == 3">
-            <el-input v-model="formPush.content"></el-input>
+            <el-input v-model="formPush.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="开始时间" v-if="yunweitype == 2||yunweitype == 3||yunweitype == 5">
             <el-date-picker
@@ -224,7 +224,7 @@
           </el-form-item>
 
           <el-form-item label="维修描述" v-if="yunweitype == 3">
-            <el-input v-model="formUpdate.content"></el-input>
+            <el-input v-model="formUpdate.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="开始时间" v-if="yunweitype == 2||yunweitype == 3||yunweitype == 5">
             <el-date-picker

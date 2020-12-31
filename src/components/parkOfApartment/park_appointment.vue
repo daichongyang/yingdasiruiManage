@@ -7,12 +7,12 @@
       <el-table-column prop="appointmentTime" label="最小可预约时间段"></el-table-column>
      <el-table-column prop="" label="开馆时间"  width="150">
         <template slot-scope="scope" v-if="scope.row.openingTime">
-          {{$root.getDateArray(Number(scope.row.openingTime))[9]}}
+          {{$root.getDateArray(Number(scope.row.openingTime))[11]}}
         </template>
     </el-table-column>
      <el-table-column prop="" label="闭馆时间"  width="150">
         <template slot-scope="scope" v-if="scope.row.closingTime">
-          {{$root.getDateArray(Number(scope.row.closingTime))[9]}}
+          {{$root.getDateArray(Number(scope.row.closingTime))[11]}}
         </template>
     </el-table-column>
      <!-- <el-table-column prop="" label="放号时间"  width="150">
@@ -20,8 +20,6 @@
           {{$root.getDateArray(Number(scope.row.numberTime))[9]}}
         </template>
     </el-table-column> -->
-    <el-table-column prop="numberAdvance" label="提前放号天数"></el-table-column>
-    <el-table-column prop="daysNumberallocation" label="放号天数"></el-table-column>
     <el-table-column prop="" label="是否可预约">
       <template slot-scope="scope">
         {{scope.row.ifappointMent==1?"已预约":"未预约"}}
@@ -30,12 +28,12 @@
     <el-table-column prop="smallPrice" label="最小预约价格单价"></el-table-column>
     <el-table-column prop="gmtModified" label="不服务时间开始">
         <template slot-scope="scope" v-if="scope.row.outofserviceHoursks">
-          {{$root.getDateArray(scope.row.outofserviceHoursks)[9]}}
+          {{$root.getDateArray(scope.row.outofserviceHoursks)[11]}}
         </template>
     </el-table-column>
     <el-table-column prop="gmtCreate" label="不服务时间结束">
         <template slot-scope="scope" v-if="scope.row.outofserviceHoursjs">
-          {{$root.getDateArray(scope.row.outofserviceHoursjs)[9]}}
+          {{$root.getDateArray(scope.row.outofserviceHoursjs)[11]}}
         </template>
     </el-table-column>
     <el-table-column label="操作" fixed="right" width=150>
@@ -122,7 +120,7 @@
               end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="可预约天数">
+          <el-form-item label="可预约人数">
             <el-input v-model.number="fanhao.number"></el-input>
           </el-form-item>
         </el-form>
@@ -360,6 +358,10 @@
             
             let params = this.fanhao
             let defineDatee = this.defineDate
+            if(!this.fanhao.number){
+              this.$message("请填写可预约人数")
+              return
+            }
             for (let index = 0; index < defineDatee.length; index++) {
               if(defineDatee[index]<this.fanhao.numberofTime&&defineDatee[index]>=this.fanhao.startTime){
                 this.$message("选中的时间段不可用")

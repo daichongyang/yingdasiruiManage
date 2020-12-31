@@ -61,11 +61,11 @@
             </el-select>
           </el-form-item>
           <div v-for="(item,index) in nodeList" :key="index">
-            <el-form-item label="标路线标题题" size="small">
+            <el-form-item label="标路线标题" size="small">
               <el-input v-model="item.title"></el-input>
             </el-form-item>
             <el-form-item label="内容" size="small">
-              <el-input v-model="item.content"></el-input>
+              <el-input v-model="item.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
           </div>
             <el-form-item label="自定义" size="small">

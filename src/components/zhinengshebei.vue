@@ -98,10 +98,10 @@
            </el-upload>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="formPush.description"></el-input>
+            <el-input v-model="formPush.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="简介" :rows="3">
-            <el-input v-model="formPush.intro"></el-input>
+            <el-input v-model="formPush.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="标签">
             <el-input v-model="formPush.label"></el-input>
@@ -175,13 +175,13 @@
           </el-form-item>
 
           <el-form-item label="描述">
-            <el-input v-model="formUpdate.description"></el-input>
+            <el-input v-model="formUpdate.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="公园id">
             <el-input v-model="formUpdate.id"></el-input>
           </el-form-item>
           <el-form-item label="简介" :rows="2">
-            <el-input v-model="formUpdate.intro"></el-input>
+            <el-input v-model="formUpdate.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="标签">
             <el-input v-model="formUpdate.label"></el-input>
@@ -289,16 +289,12 @@ export default {
             });
             map.on('click', function(e) {
               console.log(e)
-
               that.formPush.latitude= e.latLng.getLat();
               that.formPush.longitude = e.latLng.getLng();
-
              console.log(e.latLng.getLng()+ ',' + e.latLng.getLat())
               });   
           })
-
-},
-
+    },
 
     onChange(file, fileList){
       console.log(file, fileList)
@@ -376,9 +372,8 @@ export default {
       });
     },
 
-
     updateList(){//修改
-    console.log(this.formUpdate)
+      console.log(this.formUpdate)
       Facilitiesupdate(this.formUpdate).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -421,7 +416,6 @@ export default {
       for(let i = 0;i<rows.length; i++){
         console.log(this.formData.find(item=>item.id==rows[i].id))
         if(this.formData.find(item=>item.id==rows[i].id)){
-
           objs.push(this.formData[0])
         }
       }

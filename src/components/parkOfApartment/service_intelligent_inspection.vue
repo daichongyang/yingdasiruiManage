@@ -18,7 +18,7 @@ import serviceInspection from '../fangwuxuncha2'//巡查任务
 import serviceInspectionLog from '../fangwuxuncha1'//巡查记录
 export default {
   data(){
-    return{
+    return{ 
       isActive:1
     }
   },

@@ -1,11 +1,9 @@
 <template>
   <section class="modlude">
     <el-form :inline="true" :model="formSearch" class="form_inline" label-width="80px">
-   
       <el-form-item label="周边名称" size="small">
         <el-input v-model="formSearch.name" placeholder="请输入公园周边名称"></el-input>
       </el-form-item>
-
       <el-form-item>
         <el-button size="small" @click="getInit">查 询</el-button>
       </el-form-item>
@@ -40,7 +38,6 @@
         {{$root.getDateArray(scope.row.gmtModified)[9]}}
         </template>
     </el-table-column>
-
     <el-table-column prop="id" label="公园id"></el-table-column>
     <!--  <el-table-column prop="intro"label="简介"></el-table-column> -->
     <el-table-column prop="label" label="标签"></el-table-column>
@@ -106,13 +103,11 @@
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </el-form-item>
-
-
             <el-form-item label="描述">
-                <el-input v-model="formPush.description"></el-input>
+                <el-input v-model="formPush.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="简介" :rows="3">
-                <el-input v-model="formPush.intro"></el-input>
+                <el-input v-model="formPush.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="标签">
                 <el-input v-model="formPush.label"></el-input>
@@ -151,10 +146,7 @@
                 <el-input v-model="formUpdate.address"></el-input>
             </el-form-item>
             <el-form-item label="营业时间">
-
-                <el-date-picker v-model="formUpdate.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间">
-                </el-date-picker>
-
+                <el-date-picker v-model="formUpdate.businessHours" type="datetime" value-format="timestamp" placeholder="营业时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="客服电话">
                 <el-input v-model="formUpdate.contactNumber"></el-input>
@@ -176,15 +168,14 @@
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </el-form-item>
-
             <el-form-item label="描述">
-                <el-input v-model="formUpdate.description"></el-input>
+                <el-input v-model="formUpdate.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="公园id">
                 <el-input v-model="formUpdate.id"></el-input>
             </el-form-item>
             <el-form-item label="简介" :rows="2">
-                <el-input v-model="formUpdate.intro"></el-input>
+                <el-input v-model="formUpdate.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
             <el-form-item label="标签">
                 <el-input v-model="formUpdate.label"></el-input>

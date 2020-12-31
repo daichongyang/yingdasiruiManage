@@ -44,10 +44,10 @@
             <el-input v-model="formPush.name"></el-input>
           </el-form-item>
           <el-form-item label="简称">
-            <el-input v-model="formPush.abbreviation"></el-input>
+            <el-input v-model="formPush.abbreviation" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="formPush.description"></el-input>
+            <el-input v-model="formPush.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="状态">
               <el-radio-group v-model="formPush.status">
