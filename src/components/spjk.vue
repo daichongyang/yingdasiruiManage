@@ -11,6 +11,7 @@
           <el-radio-button label="列表" :disabled="true"></el-radio-button>
         </el-radio-group>
       </el-form-item>
+      <el-button @click="goSpjkList">视频监控列表</el-button>
     </el-form>
 
     <!-- 右边信息 -->
@@ -118,6 +119,11 @@ export default {
     }
   },
   methods:{
+    goSpjkList(){
+      this.$router.push({
+        path:'./iot_camera_preview'
+      })
+    },
     goBack(){
       this.$router.go(-1)
     },

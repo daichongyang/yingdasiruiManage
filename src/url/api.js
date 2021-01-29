@@ -235,3 +235,7 @@ export const updaalltedata = (params) => { return axios.post('/park/jobgoes/jobg
 export const numberAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/numberAallocation', params) } //放号
 export const delectAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/delectAallocation', params) } //删除公园预约列表
 export const onckieAallocation = (params) => { return axios.post('/park/ap-appointment/pointment/onckieAallocation', params) } //放号天
+
+export const dssDevInfo = (params) => { return axios.post('/park/dssDevInfo/getDevices', params) } //视频监控
+export const getHLSUrl = (params) => { return axios.post('/park/dssDevInfo/getHLSUrl', params) } //播放列表
+export const initDevices = (params) => { return axios.post('/park/dssDevInfo/initDevices', params) } //初始化设备

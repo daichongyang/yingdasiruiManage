@@ -243,7 +243,11 @@ const service_office_task = () =>
 //报警受理
 const service_intelligent_alarm = () =>
     import ('@/components/ziyuanManage/service_intelligent_alarm');
+//视频监控
 
+import iot_camera_dev from '@/components/shipingjiankong/iot_camera_dev'
+import iot_camera_preview from '@/components/shipingjiankong/iot_camera_preview'
+import iot_camera_platform from '@/components/shipingjiankong/iot_camera_platform'
 Vue.use(Router)
 
 export default new Router({
@@ -270,6 +274,30 @@ export default new Router({
                             component: acs_dev,
                             meta: {
                                 id: 15
+                            }
+                        },
+                        {
+                            path: '/iot_camera_dev',
+                            name: '设备管理',
+                            component: iot_camera_dev,
+                            meta: {
+                                id: 14
+                            }
+                        },
+                        {
+                            path: '/iot_camera_preview',
+                            name: '分屏预览',
+                            component: iot_camera_preview,
+                            meta: {
+                                id: 15
+                            }
+                        },
+                        {
+                            path: '/iot_camera_platform',
+                            name: '小区平台信息',
+                            component: iot_camera_platform,
+                            meta: {
+                                id: 155
                             }
                         },
                         {

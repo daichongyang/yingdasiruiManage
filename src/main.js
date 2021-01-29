@@ -11,8 +11,9 @@ import Vuex from 'vuex'
 import axios from 'axios';
 import md5 from 'js-md5';
 import base64 from 'js-base64';
+import qs from 'qs'
 import { getDateArray } from './assets/js/util';
-
+import 'video.js/dist/video-js.css'
 // Vue.$getDateArray = getDateArray
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -27,13 +28,14 @@ Vue.config.errorHandler = function(err, vm, info) {
 }
 let token;
 let dataBase64 = base64.Base64
+Vue.prototype.$qs = qs
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
 router.beforeEach((to, from, next) => {
     // console.log(to)
     // if (to.meta.id) {
-        // console.log(sessionStorage.getItem('tenantCode') + ":" + to.meta.id + ":dist")
-        // token = sessionStorage.getItem('tenantCode') + ":" + to.meta.id + ":dist"
+    // console.log(sessionStorage.getItem('tenantCode') + ":" + to.meta.id + ":dist")
+    // token = sessionStorage.getItem('tenantCode') + ":" + to.meta.id + ":dist"
     // }
     // console.log(sessionStorage.getItem('token'))
     axios.interceptors.request.use(
@@ -62,7 +64,7 @@ new Vue({
         router,
         data: () => {
             return {
-                getDateArray: getDateArray
+                getDateArray: getDateArray,
             }
         },
         components: { App },
@@ -73,17 +75,17 @@ axios.interceptors.request.use(function(config) {
     let data = ''
     let arrdata = []
         // config.cancelToken = source.token;
-    // if (token) {
-    //     config.headers.token = dataBase64.encode(token)
-    //     sessionStorage.setItem('token', dataBase64.encode(token))
-    //     console.log(dataBase64.encode(token))
-    // }
-    // if (config.method == 'post') {
-    //     for (let item in config.data) {
-    //         arrdata.push(item)
-    //     }
-    //     // 字典排序
-    //     let newarr = arrdata.sort()
+        // if (token) {
+        //     config.headers.token = dataBase64.encode(token)
+        //     sessionStorage.setItem('token', dataBase64.encode(token))
+        //     console.log(dataBase64.encode(token))
+        // }
+        // if (config.method == 'post') {
+        //     for (let item in config.data) {
+        //         arrdata.push(item)
+        //     }
+        //     // 字典排序
+        //     let newarr = arrdata.sort()
 
     //     for (let i = 0; i < newarr.length; i++) {
     //         data += newarr[i] + ':' + config.data[newarr[i]] + ","
